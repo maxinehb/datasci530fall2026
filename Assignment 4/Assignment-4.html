@@ -7812,16 +7812,11 @@ a.anchor-link {
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 style="color:#000000;"> House Floor Actions Associated with Bills in the “Senate bills” Category  </h3>
 <ul>
-<li>What proportion of these actions were suspended? What proportion of these</li>
+<li><p>What proportion of these actions were suspended? What proportion of these actions were suspended as amended?</p>
+</li>
+<li><p>The  House  floor  actions  mention  specific  people  by  (Mr.,  Ms.,  Mrs.,  etc).  Use regular  expressions  to  extract  the  names  of  specific  people.  Produce  a  new dataset counting how many bills mention the same person and then extract the unique list of names of the people mentioned. What is the distribution of total bills proposed per person?</p>
+</li>
 </ul>
-<p>actions were suspended as amended?</p>
-<ul>
-<li>The  House  floor  actions  mention  specific  people  by  (Mr.,  Ms.,  Mrs.,  etc).  Use</li>
-</ul>
-<p>regular  expressions  to  extract  the  names  of  specific  people.  Produce  a  new 
-dataset counting how many bills mention the same person and then extract the 
-unique list of names of the people mentioned. What is the distribution of total 
-bills proposed per person?</p>
 <p>I filtered the dataset to House floor actions in the Senate bill category and counted the rows to find the number of house floor actions associated with bills in the "Senate bills" category. Then, I searched the action text for “suspend the rules” and “as amended,” and calculated the proportions of each. Next, I use a regular expression to extract names following “Mr.,” “Ms.,” or “Mrs.” and ending before “asked” or “moved,” in case their full name or if their state is also listed. I grouped the names with bill type and bill number to count each distinct bill only once per person, got the unique names, and plotted the bill counts for all 53 people in a bar chart.</p>
 </div>
 </div>
@@ -7968,14 +7963,11 @@ bills proposed per person?</p>
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 style="color:#000000;"> Senate Amendment Proposed Bills </h3>
 <ul>
-<li>Produce a new dataset counting how many senators are mentioned per bill. This</li>
+<li><p>Produce a new dataset counting how many senators are mentioned per bill. This dataset  should  also  include  two  variables,  with  the  name  of  the  first  senator (Senator 1) mentioned in the bill and the name of the second senator (Senator 2). What is the distribution of the number of senators per bill?</p>
+</li>
+<li><p>With how many different people does each Senator coauthor bills, i.e. how many different people appear as Senator 2 for each Senator 1?</p>
+</li>
 </ul>
-<p>dataset  should  also  include  two  variables,  with  the  name  of  the  first  senator 
-(Senator 1) mentioned in the bill and the name of the second senator (Senator 2). What is the distribution of the number of senators per bill?</p>
-<ul>
-<li>With how many different people does each Senator coauthor bills, i.e. how many</li>
-</ul>
-<p>different people appear as Senator 2 for each Senator 1?</p>
 <p>I selected actions marked “senate amendment proposed (on the floor)” and used regular expressions to extract senator names. I grouped the actions by bill type number and counted each different senator name one time per bill. I recorded the first two names mentioned. I displayed a preview of this dataset to see which senators work with each other. I also displayed a table of the distribution of senator counts per bill. I counted the different Senator 2 names appearing with each Senator 1 name, and I plotted the top ten most mentioned Senator 1 names in a bar chart.</p>
 </div>
 </div>

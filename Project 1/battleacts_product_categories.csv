@@ -1,7 +1,0 @@
-product_name,product_url,manual_mentioned,instructional_video_mentioned,formula_summary_sheet_mentioned,quizzes_flashcards_mentioned,excel_practice_mentioned,discussion_support_mentioned,study_schedule_mentioned,hybrid_exam_mentioned,pdf_sample_cards,excel_sample_cards,video_sample_cards
-CAS Exam 5,https://battleactsmain.ca/v2/product/exam5,True,True,True,True,True,True,True,False,3,1,2
-CAS Exam 6C,https://battleactsmain.ca/v2/product/exam6_ca,True,False,False,True,True,True,True,False,1,1,1
-CAS Exam 6U,https://battleactsmain.ca/v2/product/exam6_us,True,True,True,True,True,True,True,False,2,2,2
-CAS Exam 7,https://battleactsmain.ca/v2/product/exam7,True,False,True,True,True,True,True,True,2,1,1
-CAS Exam 8,https://battleactsmain.ca/v2/product/exam8,True,False,False,True,True,True,True,True,1,1,1
-CAS Exam 9,https://battleactsmain.ca/v2/product/exam9,True,False,False,True,True,True,True,True,1,0,1

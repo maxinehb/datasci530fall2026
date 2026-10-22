@@ -7482,22 +7482,26 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h1 id="BattleActs-Actuarial-Exam-Preparation-Products">BattleActs Actuarial Exam Preparation Products<a class="anchor-link" href="#BattleActs-Actuarial-Exam-Preparation-Products">¶</a></h1><h3 id="DATASCI-530-%E2%80%94-Project-1">DATASCI 530 — Project 1<a class="anchor-link" href="#DATASCI-530-%E2%80%94-Project-1">¶</a></h3><p>Maxine Hakimi-Bulson</p>
-<p><strong>Source and scope.</strong> This project compares the six BattleActs exam preparation courses (CAS Exams 5, 6C, 6U, 7, 8, 9) at <code>battleactsmain.ca</code>. For each course it collects the listed price, currency, access period, practice-exam count, feature text, and the metadata and contents of every public PDF and Excel sample. BattleActs is a single vendor, and its pages show no customer ratings or categories, so those fields do not exist here; the exam itself serves as the category.</p>
-<p><strong>When and how.</strong> Data were collected on October 19, 2026. BattleActs gave written permission for this educational scraping project and for sharing the code, data, and analysis on GitHub. Collection was limited to public product pages and their linked public PDF and Excel samples. Accounts, paid materials, customer data, and videos were excluded, and requests were spaced with pauses.</p>
+<div style="text-align: center;">
+<h1>BattleActs Actuarial Exam Preparation Products</h1>
+<h3>DATASCI 530 — Project 1</h3>
+<p>Maxine Hakimi-Bulson</p>
 </div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Data-Collection-Process">Data Collection Process<a class="anchor-link" href="#Data-Collection-Process">¶</a></h2><p>Before coding, I inspected two products by hand in a spreadsheet to choose the variables. The script opens the <strong>Exams</strong> menu and loops over the six product links, clicking each one, then extracts the course information and the sample-card metadata from that page. It then downloads every linked PDF and Excel file once per unique URL, saved under <code>sample_files/[PDF or Excel]/[exam]/</code> using the file's original name.</p>
-<p>Three datasets are exported: <strong>Products</strong> (one row per course), <strong>PDF Samples</strong> and <strong>Excel Samples</strong> (one row per unique file, linked to courses by product URL). Cards that share a file keep all their labels in one record. PDF text and the cell values of every worksheet are kept; formulas are stored as text and not executed, and extracted text may omit images, charts, and layout. Tool indicators record <em>mentions</em> in descriptions, feature lists, and sample labels, so "Not matched" does not mean a feature is unavailable.</p>
-<p>Requirements: pandas, selenium, requests, pypdf, openpyxl. Only the report tables are displayed.</p>
+<h2 id="Introduction">Introduction<a class="anchor-link" href="#Introduction">¶</a></h2><p>BattleActs is an online education and exam-prep platform that helps students pass professional actuarial exams for the Casualty Actuarial Society (CAS). CAS is a professional organization that administers credentialing exams for actuaries specializing in property and casualty insurance, such as auto and homeowners insurance. An actuary uses mathematics, statistics, and financial models to assess risk and estimate the costs of uncertain events. Used by more than 2,000 students, BattleActs offers study guides on six actuarial exams, each comprising of articles, quiz banks, infinite calculation problems, and other tools made to help students study for (and hopefully pass) their actuary exams.</p>
+<p>For this project, I collected information about BattleActs' six study guides for Exams 5, 6C, 6U, 7, 8, and 9 from their website. I extracted each course's price, access period, and advertised study tool descriptions and features. I also collected the publicly available PDF and Excel sample study materials for each exam in order to compare the content, length, and detail of materials offered for each exam.</p>
+<p>All product information and sample materials came from <a href="https://battleactsmain.ca/v2/home">BattleActs</a>. The company granted written permission for this one-time educational web scraping project and for sharing the code, data, and analysis on GitHub. Data were collected on October 19, 2026. Collection was limited to public pages and linked PDF and Excel files. No accounts, paid course materials, customer information, or video downloads were collected. I included pauses between requests.</p>
+<h2 id="Data-Collection-Process">Data Collection Process<a class="anchor-link" href="#Data-Collection-Process">¶</a></h2><p>Before writing the web-scraping algorithm and code, I manually collected data on two exam preparation guides and recorded their information in a spreadsheet. This helped me determine which information I wanted to explore and do future analysis in the project, and how and where to locate such data on the website. The script opens the Exams menu at the top of the home page, and uses a loop to click through all six course pages, collect the product information, and extract URLs. Each unique PDF or Excel file is downloaded once and saved in folders organized by file type and exam.</p>
+<p>The collected information is organized into three datasets:</p>
+<ul>
+<li><p><strong>Products:</strong> one row per preparation course, including prices, descriptions, features, access periods, and what makes that exam unique.</p>
+</li>
+<li><p><strong>PDF Samples:</strong> one row per unique PDF, including its sample label, source URL, page count, and extracted text.</p>
+</li>
+<li><p><strong>Excel Samples:</strong> one row per unique workbook, including its sample label, source URL, worksheet names and counts, formula count, and extracted cell contents.</p>
+</li>
+</ul>
+<p>When multiple sample cards link to the same file, their labels are combined in one record. Text is extracted from every PDF page and every Excel worksheet, and Excel formulas are retained as expressions rather than calculated results.</p>
+<h2 id="Import-Libraries-for-Web-Scraping">Import Libraries for Web Scraping<a class="anchor-link" href="#Import-Libraries-for-Web-Scraping">¶</a></h2><p>Libraries and packages are imported, the starting URL is defined, and the timestamp function is defined.</p>
 </div>
 </div>
 </div>
@@ -7513,7 +7517,6 @@ a.anchor-link {
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span> <span class="nn">urllib.parse</span> <span class="kn">import</span> <span class="n">unquote</span><span class="p">,</span> <span class="n">urlsplit</span>
-
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">requests</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">HTML</span><span class="p">,</span> <span class="n">display</span>
@@ -7526,14 +7529,12 @@ a.anchor-link {
 
 <span class="n">START_URL</span> <span class="o">=</span> <span class="s2">"https://battleactsmain.ca/v2/home"</span>
 <span class="n">STYLE</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"&lt;style&gt;.report-table table{border-collapse:collapse;width:100%;font-size:13px}"</span>
-         <span class="s2">".report-table th{background:#eaf0f7;color:#183e60;text-align:left}"</span>
-         <span class="s2">".report-table th,.report-table td{padding:9px;border-bottom:1px solid #dce3eb;white-space:normal}"</span>
+         <span class="s2">".report-table th{background:#eaf0f7;color:#183e60;text-align:center!important}"</span>
+         <span class="s2">".report-table th,.report-table td{padding:9px;border-bottom:1px solid #dce3eb;white-space:normal;text-align:center!important}"</span>
          <span class="s2">".report-table tr:nth-child(even){background:#f7f9fb}&lt;/style&gt;"</span><span class="p">)</span>
-
 
 <span class="k">def</span> <span class="nf">now</span><span class="p">():</span>
     <span class="k">return</span> <span class="n">pd</span><span class="o">.</span><span class="n">Timestamp</span><span class="o">.</span><span class="n">now</span><span class="p">(</span><span class="n">tz</span><span class="o">=</span><span class="s2">"America/New_York"</span><span class="p">)</span><span class="o">.</span><span class="n">isoformat</span><span class="p">(</span><span class="n">timespec</span><span class="o">=</span><span class="s2">"seconds"</span><span class="p">)</span>
-
 
 <span class="k">def</span> <span class="nf">show_table</span><span class="p">(</span><span class="n">frame</span><span class="p">):</span>
     <span class="n">html</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">na_rep</span><span class="o">=</span><span class="s2">"—"</span><span class="p">,</span> <span class="n">border</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -7550,7 +7551,45 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Product-Extraction-Function">Product Extraction Function<a class="anchor-link" href="#Product-Extraction-Function">¶</a></h2>
+<h2 id="Use-the-Saved-Collection">Use the Saved Collection<a class="anchor-link" href="#Use-the-Saved-Collection">¶</a></h2><p>Leave <code>COLLECT_NEW_DATA = False</code> to load the three saved CSV files and update the report without accessing the website or changing collection timestamps.</p>
+</div>
+</div>
+</div>
+</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea">
+<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
+<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
+<div class="cm-editor cm-s-jupyter">
+<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Keep False to use the saved collection and preserve its timestamps</span>
+<span class="n">COLLECT_NEW_DATA</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="n">product_columns</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"product_name"</span><span class="p">,</span> <span class="s2">"price"</span><span class="p">,</span> <span class="s2">"currency"</span><span class="p">,</span> <span class="s2">"description"</span><span class="p">,</span> <span class="s2">"features"</span><span class="p">,</span>
+    <span class="s2">"duration_months"</span><span class="p">,</span> <span class="s2">"product_url"</span><span class="p">,</span> <span class="s2">"collection_date"</span><span class="p">,</span> <span class="s2">"exam_differences"</span><span class="p">,</span>
+    <span class="s2">"practice_exam_count"</span><span class="p">,</span> <span class="s2">"free_extension_months"</span>
+<span class="p">]</span>
+
+<span class="c1"># The saved CSV files are loaded to update the results without repeating collection</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">COLLECT_NEW_DATA</span><span class="p">:</span>
+    <span class="n">products_final</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"battleacts_products.csv"</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">product_columns</span><span class="p">)</span>
+    <span class="n">pdf_samples</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"battleacts_pdf_samples.csv"</span><span class="p">)</span>
+    <span class="n">excel_samples</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">"battleacts_excel_samples.csv"</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="Product-Extraction-Function">Product Extraction Function<a class="anchor-link" href="#Product-Extraction-Function">¶</a></h2><p>This function collects the details from a course page. Numbers extracted are converted to numeric values, and the source URL and collection time are recorded.</p>
 </div>
 </div>
 </div>
@@ -7632,7 +7671,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Automated-Navigation-and-Collection">Automated Navigation and Collection<a class="anchor-link" href="#Automated-Navigation-and-Collection">¶</a></h2>
+<h2 id="Automated-Navigation-and-Collection">Automated Navigation and Collection<a class="anchor-link" href="#Automated-Navigation-and-Collection">¶</a></h2><p>The script opens the Exams menu and uses a loop to click through all six course pages, applying the extraction function to each page. Pauses are included between courses.</p>
 </div>
 </div>
 </div>
@@ -7644,39 +7683,41 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">webdriver</span><span class="o">.</span><span class="n">ChromeOptions</span><span class="p">())</span>
-<span class="n">wait</span> <span class="o">=</span> <span class="n">WebDriverWait</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
-<span class="n">menu_xpath</span> <span class="o">=</span> <span class="s1">'//a[@id="navbarDropdown" and normalize-space()="Exams"]'</span>
-<span class="n">item_xpath</span> <span class="o">=</span> <span class="s1">'//a[contains(@class, "dropdown-item") and contains(@href, "/v2/product/")]'</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">COLLECT_NEW_DATA</span><span class="p">:</span>
+    <span class="n">driver</span> <span class="o">=</span> <span class="n">webdriver</span><span class="o">.</span><span class="n">Chrome</span><span class="p">(</span><span class="n">options</span><span class="o">=</span><span class="n">webdriver</span><span class="o">.</span><span class="n">ChromeOptions</span><span class="p">())</span>
+    <span class="n">wait</span> <span class="o">=</span> <span class="n">WebDriverWait</span><span class="p">(</span><span class="n">driver</span><span class="p">,</span> <span class="mi">15</span><span class="p">)</span>
+    <span class="n">menu_xpath</span> <span class="o">=</span> <span class="s1">'//a[@id="navbarDropdown" and normalize-space()="Exams"]'</span>
+    <span class="n">item_xpath</span> <span class="o">=</span> <span class="s1">'//a[contains(@class, "dropdown-item") and contains(@href, "/v2/product/")]'</span>
 
 
-<span class="k">def</span> <span class="nf">open_exam_menu</span><span class="p">():</span>
-    <span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">START_URL</span><span class="p">)</span>
-    <span class="n">wait</span><span class="o">.</span><span class="n">until</span><span class="p">(</span><span class="n">EC</span><span class="o">.</span><span class="n">element_to_be_clickable</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="n">menu_xpath</span><span class="p">)))</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+    <span class="k">def</span> <span class="nf">open_exam_menu</span><span class="p">():</span>
+        <span class="n">driver</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">START_URL</span><span class="p">)</span>
+        <span class="n">wait</span><span class="o">.</span><span class="n">until</span><span class="p">(</span><span class="n">EC</span><span class="o">.</span><span class="n">element_to_be_clickable</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="n">menu_xpath</span><span class="p">)))</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
 
 
-<span class="c1"># Collect the six product URLs (duplicates removed, order kept)</span>
-<span class="n">open_exam_menu</span><span class="p">()</span>
-<span class="n">exam_urls</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s2">"href"</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_elements</span><span class="p">(</span><span class="s2">"xpath"</span><span class="p">,</span> <span class="n">item_xpath</span><span class="p">)))</span>
-<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">exam_urls</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">6</span><span class="p">:</span>
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected 6 exam links, found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">exam_urls</span><span class="p">)</span><span class="si">}</span><span class="s2">. Check the menu."</span><span class="p">)</span>
-
-<span class="c1"># Click each product link in turn and extract that page</span>
-<span class="n">products</span><span class="p">,</span> <span class="n">all_samples</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
-<span class="k">for</span> <span class="n">exam_url</span> <span class="ow">in</span> <span class="n">exam_urls</span><span class="p">:</span>
+    <span class="c1"># Collect the six product URLs</span>
     <span class="n">open_exam_menu</span><span class="p">()</span>
-    <span class="n">link</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'//a[contains(@class, "dropdown-item") and @href="</span><span class="si">{</span><span class="n">exam_url</span><span class="si">}</span><span class="s1">"]'</span>
-    <span class="n">wait</span><span class="o">.</span><span class="n">until</span><span class="p">(</span><span class="n">EC</span><span class="o">.</span><span class="n">element_to_be_clickable</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="n">link</span><span class="p">)))</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
-    <span class="n">wait</span><span class="o">.</span><span class="n">until</span><span class="p">(</span><span class="n">EC</span><span class="o">.</span><span class="n">url_to_be</span><span class="p">(</span><span class="n">exam_url</span><span class="p">))</span>
-    <span class="n">wait</span><span class="o">.</span><span class="n">until</span><span class="p">(</span><span class="n">EC</span><span class="o">.</span><span class="n">visibility_of_element_located</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s2">"//h1"</span><span class="p">)))</span>
-    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>  <span class="c1"># let the sample carousel initialize</span>
-    <span class="n">product</span><span class="p">,</span> <span class="n">samples</span> <span class="o">=</span> <span class="n">extract_product</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
-    <span class="n">products</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">product</span><span class="p">)</span>
-    <span class="n">all_samples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
-    <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># pause between products</span>
+    <span class="n">exam_urls</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="s2">"href"</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">driver</span><span class="o">.</span><span class="n">find_elements</span><span class="p">(</span><span class="s2">"xpath"</span><span class="p">,</span> <span class="n">item_xpath</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">exam_urls</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">6</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Expected 6 exam links, found </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">exam_urls</span><span class="p">)</span><span class="si">}</span><span class="s2">. Check the menu."</span><span class="p">)</span>
 
-<span class="n">driver</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
-<span class="n">products_df</span><span class="p">,</span> <span class="n">samples_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">products</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_samples</span><span class="p">)</span>
+    <span class="c1"># Click each product link in turn and extract that page</span>
+    <span class="n">products</span><span class="p">,</span> <span class="n">all_samples</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">exam_url</span> <span class="ow">in</span> <span class="n">exam_urls</span><span class="p">:</span>
+        <span class="n">open_exam_menu</span><span class="p">()</span>
+        <span class="n">link</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">'//a[contains(@class, "dropdown-item") and @href="</span><span class="si">{</span><span class="n">exam_url</span><span class="si">}</span><span class="s1">"]'</span>
+        <span class="n">wait</span><span class="o">.</span><span class="n">until</span><span class="p">(</span><span class="n">EC</span><span class="o">.</span><span class="n">element_to_be_clickable</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="n">link</span><span class="p">)))</span><span class="o">.</span><span class="n">click</span><span class="p">()</span>
+        <span class="n">wait</span><span class="o">.</span><span class="n">until</span><span class="p">(</span><span class="n">EC</span><span class="o">.</span><span class="n">url_to_be</span><span class="p">(</span><span class="n">exam_url</span><span class="p">))</span>
+        <span class="n">wait</span><span class="o">.</span><span class="n">until</span><span class="p">(</span><span class="n">EC</span><span class="o">.</span><span class="n">visibility_of_element_located</span><span class="p">((</span><span class="n">By</span><span class="o">.</span><span class="n">XPATH</span><span class="p">,</span> <span class="s2">"//h1"</span><span class="p">)))</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">product</span><span class="p">,</span> <span class="n">samples</span> <span class="o">=</span> <span class="n">extract_product</span><span class="p">(</span><span class="n">driver</span><span class="p">)</span>
+        <span class="n">products</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">product</span><span class="p">)</span>
+        <span class="n">all_samples</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>  <span class="c1"># Pause between products</span>
+
+    <span class="n">driver</span><span class="o">.</span><span class="n">quit</span><span class="p">()</span>
+    <span class="n">products_df</span><span class="p">,</span> <span class="n">samples_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">products</span><span class="p">),</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">all_samples</span><span class="p">)</span>
+    <span class="n">products_final</span> <span class="o">=</span> <span class="n">products_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -7689,7 +7730,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Prepare-Study-Tool-Indicators">Prepare Study-Tool Indicators<a class="anchor-link" href="#Prepare-Study-Tool-Indicators">¶</a></h2>
+<h2 id="Download-and-Extract-PDF-and-Excel-Samples">Download and Extract PDF and Excel Samples<a class="anchor-link" href="#Download-and-Extract-PDF-and-Excel-Samples">¶</a></h2><p>Each unique PDF or Excel file is downloaded once. Text is extracted from every PDF page and Excel worksheet, along with page counts, worksheet details, and formula counts. Videos are excluded.</p>
 </div>
 </div>
 </div>
@@ -7701,133 +7742,95 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># Flag tools mentioned in the description, feature list, or any sample label</span>
-<span class="n">labels</span> <span class="o">=</span> <span class="n">samples_df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"product_url"</span><span class="p">)[</span><span class="s2">"sample_label"</span><span class="p">]</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">)</span>
-<span class="n">tool_text</span> <span class="o">=</span> <span class="p">(</span><span class="n">products_df</span><span class="p">[</span><span class="s2">"description"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">products_df</span><span class="p">[</span><span class="s2">"features"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
-             <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span> <span class="o">+</span> <span class="n">products_df</span><span class="p">[</span><span class="s2">"product_url"</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="n">labels</span><span class="p">)</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">))</span>
-<span class="n">tool_patterns</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">"instructional_video_mentioned"</span><span class="p">:</span> <span class="sa">r</span><span class="s2">"video lessons|instructional videos?"</span><span class="p">,</span>
-    <span class="s2">"formula_summary_sheet_mentioned"</span><span class="p">:</span> <span class="sa">r</span><span class="s2">"formula|summary sheets?"</span><span class="p">,</span>
-    <span class="s2">"hybrid_exam_mentioned"</span><span class="p">:</span> <span class="sa">r</span><span class="s2">"hybrid CAS exam"</span><span class="p">,</span>
-<span class="p">}</span>
-<span class="n">products_final</span> <span class="o">=</span> <span class="n">products_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-
-<span class="k">for</span> <span class="n">column</span><span class="p">,</span> <span class="n">pattern</span> <span class="ow">in</span> <span class="n">tool_patterns</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">products_final</span><span class="p">[</span><span class="n">column</span><span class="p">]</span> <span class="o">=</span> <span class="n">tool_text</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span>
-        <span class="n">pattern</span><span class="p">,</span> <span class="n">case</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span>
-    <span class="p">)</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Download-and-Extract-PDF-and-Excel-Samples">Download and Extract PDF and Excel Samples<a class="anchor-link" href="#Download-and-Extract-PDF-and-Excel-Samples">¶</a></h2>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell jp-mod-noOutputs">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">read_pdf</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-    <span class="n">reader</span> <span class="o">=</span> <span class="n">PdfReader</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-    <span class="n">text</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">extract_text</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">""</span> <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">reader</span><span class="o">.</span><span class="n">pages</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">text</span><span class="p">,</span> <span class="p">{</span><span class="s2">"page_count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">pages</span><span class="p">)}</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">COLLECT_NEW_DATA</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">read_pdf</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="n">reader</span> <span class="o">=</span> <span class="n">PdfReader</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">page</span><span class="o">.</span><span class="n">extract_text</span><span class="p">()</span> <span class="ow">or</span> <span class="s2">""</span> <span class="k">for</span> <span class="n">page</span> <span class="ow">in</span> <span class="n">reader</span><span class="o">.</span><span class="n">pages</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">text</span><span class="p">,</span> <span class="p">{</span><span class="s2">"page_count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">reader</span><span class="o">.</span><span class="n">pages</span><span class="p">)}</span>
 
 
-<span class="k">def</span> <span class="nf">read_xlsx</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
-    <span class="n">book</span> <span class="o">=</span> <span class="n">load_workbook</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">read_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">data_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-    <span class="k">try</span><span class="p">:</span>
-        <span class="n">lines</span><span class="p">,</span> <span class="n">formulas</span> <span class="o">=</span> <span class="p">[],</span> <span class="mi">0</span>
+    <span class="k">def</span> <span class="nf">read_xlsx</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+        <span class="n">book</span> <span class="o">=</span> <span class="n">load_workbook</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">read_only</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">data_only</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">lines</span><span class="p">,</span> <span class="n">formulas</span> <span class="o">=</span> <span class="p">[],</span> <span class="mi">0</span>
 
-        <span class="k">for</span> <span class="n">sheet</span> <span class="ow">in</span> <span class="n">book</span><span class="o">.</span><span class="n">worksheets</span><span class="p">:</span>
-            <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Worksheet: </span><span class="si">{</span><span class="n">sheet</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">sheet</span> <span class="ow">in</span> <span class="n">book</span><span class="o">.</span><span class="n">worksheets</span><span class="p">:</span>
+                <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Worksheet: </span><span class="si">{</span><span class="n">sheet</span><span class="o">.</span><span class="n">title</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sheet</span><span class="o">.</span><span class="n">iter_rows</span><span class="p">():</span>
-                <span class="n">cells</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">row</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
-                <span class="n">formulas</span> <span class="o">+=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s2">"f"</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">sheet</span><span class="o">.</span><span class="n">iter_rows</span><span class="p">():</span>
+                    <span class="n">cells</span> <span class="o">=</span> <span class="p">[</span><span class="n">c</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">row</span> <span class="k">if</span> <span class="n">c</span><span class="o">.</span><span class="n">value</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">]</span>
+                    <span class="n">formulas</span> <span class="o">+=</span> <span class="nb">sum</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">data_type</span> <span class="o">==</span> <span class="s2">"f"</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">)</span>
 
-                <span class="k">if</span> <span class="n">cells</span><span class="p">:</span>
-                    <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">" | "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">))</span>
+                    <span class="k">if</span> <span class="n">cells</span><span class="p">:</span>
+                        <span class="n">lines</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="s2">" | "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cells</span><span class="p">))</span>
 
-        <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span> <span class="p">{</span>
-            <span class="s2">"sheet_count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">book</span><span class="o">.</span><span class="n">sheetnames</span><span class="p">),</span>
-            <span class="s2">"sheet_names"</span><span class="p">:</span> <span class="s2">" | "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">book</span><span class="o">.</span><span class="n">sheetnames</span><span class="p">),</span>
-            <span class="s2">"formula_cells"</span><span class="p">:</span> <span class="n">formulas</span>
+            <span class="k">return</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">lines</span><span class="p">),</span> <span class="p">{</span>
+                <span class="s2">"sheet_count"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">book</span><span class="o">.</span><span class="n">sheetnames</span><span class="p">),</span>
+                <span class="s2">"sheet_names"</span><span class="p">:</span> <span class="s2">" | "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">book</span><span class="o">.</span><span class="n">sheetnames</span><span class="p">),</span>
+                <span class="s2">"formula_cells"</span><span class="p">:</span> <span class="n">formulas</span>
+            <span class="p">}</span>
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="n">book</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+
+    <span class="n">readers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"PDF"</span><span class="p">:</span> <span class="n">read_pdf</span><span class="p">,</span> <span class="s2">"Excel"</span><span class="p">:</span> <span class="n">read_xlsx</span><span class="p">}</span>
+
+    <span class="c1"># Include linked PDFs and Excel files; exclude videos and missing URLs</span>
+    <span class="n">linked</span> <span class="o">=</span> <span class="n">samples_df</span><span class="p">[</span>
+        <span class="n">samples_df</span><span class="p">[</span><span class="s2">"resource_type"</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">readers</span><span class="p">)</span>
+        <span class="o">&amp;</span> <span class="n">samples_df</span><span class="p">[</span><span class="s2">"sample_url"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
+    <span class="p">]</span>
+
+    <span class="n">records</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="k">for</span> <span class="n">url</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">linked</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"sample_url"</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+        <span class="n">kind</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s2">"resource_type"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">product_name</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s2">"product_name"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="n">exam</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[^A-Za-z0-9]+"</span><span class="p">,</span> <span class="s2">"_"</span><span class="p">,</span> <span class="n">product_name</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
+        <span class="n">label</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s2">"sample_label"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="s2">"study manual"</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s2">"Study_manual"</span>
+        <span class="k">elif</span> <span class="s2">"formula"</span> <span class="ow">in</span> <span class="n">label</span> <span class="ow">or</span> <span class="s2">"summary sheet"</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s2">"Formula_summary_sheet"</span>
+        <span class="k">elif</span> <span class="s2">"past cas exams"</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s2">"Past_CAS_exams"</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="s2">"Practice_problems_and_exams"</span>
+
+        <span class="n">suffix</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">unquote</span><span class="p">(</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">path</span><span class="p">))</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"sample_files"</span><span class="p">)</span> <span class="o">/</span> <span class="n">kind</span> <span class="o">/</span> <span class="n">exam</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">filename</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+        <span class="n">record</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"sample_url"</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
+            <span class="s2">"content_collection_date"</span><span class="p">:</span> <span class="n">now</span><span class="p">(),</span>
+            <span class="s2">"extraction_status"</span><span class="p">:</span> <span class="s2">"Failed"</span>
         <span class="p">}</span>
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="n">book</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+                <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+                    <span class="n">url</span><span class="p">,</span>
+                    <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"User-Agent"</span><span class="p">:</span> <span class="s2">"DATASCI530 educational project"</span><span class="p">},</span>
+                    <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span>
+                <span class="p">)</span>
+                <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
+                <span class="n">path</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+                <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
-<span class="n">readers</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"PDF"</span><span class="p">:</span> <span class="n">read_pdf</span><span class="p">,</span> <span class="s2">"Excel"</span><span class="p">:</span> <span class="n">read_xlsx</span><span class="p">}</span>
-
-<span class="c1"># Include linked PDFs and Excel files; exclude videos and missing URLs</span>
-<span class="n">linked</span> <span class="o">=</span> <span class="n">samples_df</span><span class="p">[</span>
-    <span class="n">samples_df</span><span class="p">[</span><span class="s2">"resource_type"</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">readers</span><span class="p">)</span>
-    <span class="o">&amp;</span> <span class="n">samples_df</span><span class="p">[</span><span class="s2">"sample_url"</span><span class="p">]</span><span class="o">.</span><span class="n">fillna</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="s2">""</span><span class="p">)</span>
-<span class="p">]</span>
-
-<span class="n">records</span> <span class="o">=</span> <span class="p">[]</span>
-
-<span class="k">for</span> <span class="n">url</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">linked</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"sample_url"</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
-    <span class="n">kind</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s2">"resource_type"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">product_name</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s2">"product_name"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-    <span class="n">exam</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s2">"[^A-Za-z0-9]+"</span><span class="p">,</span> <span class="s2">"_"</span><span class="p">,</span> <span class="n">product_name</span><span class="p">)</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="s2">"_"</span><span class="p">)</span>
-    <span class="n">label</span> <span class="o">=</span> <span class="n">group</span><span class="p">[</span><span class="s2">"sample_label"</span><span class="p">]</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-
-    <span class="k">if</span> <span class="s2">"study manual"</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="s2">"Study_manual"</span>
-    <span class="k">elif</span> <span class="s2">"formula"</span> <span class="ow">in</span> <span class="n">label</span> <span class="ow">or</span> <span class="s2">"summary sheet"</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="s2">"Formula_summary_sheet"</span>
-    <span class="k">elif</span> <span class="s2">"past cas exams"</span> <span class="ow">in</span> <span class="n">label</span><span class="p">:</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="s2">"Past_CAS_exams"</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">filename</span> <span class="o">=</span> <span class="s2">"Practice_problems_and_exams"</span>
-
-    <span class="n">suffix</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">unquote</span><span class="p">(</span><span class="n">urlsplit</span><span class="p">(</span><span class="n">url</span><span class="p">)</span><span class="o">.</span><span class="n">path</span><span class="p">))</span><span class="o">.</span><span class="n">suffix</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
-    <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"sample_files"</span><span class="p">)</span> <span class="o">/</span> <span class="n">kind</span> <span class="o">/</span> <span class="n">exam</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">filename</span><span class="si">}{</span><span class="n">suffix</span><span class="si">}</span><span class="s2">"</span>
-    <span class="n">path</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-
-    <span class="n">record</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">"sample_url"</span><span class="p">:</span> <span class="n">url</span><span class="p">,</span>
-        <span class="s2">"content_collection_date"</span><span class="p">:</span> <span class="n">now</span><span class="p">(),</span>
-        <span class="s2">"extraction_status"</span><span class="p">:</span> <span class="s2">"Failed"</span>
-    <span class="p">}</span>
-
-    <span class="k">try</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
-            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
-                <span class="n">url</span><span class="p">,</span>
-                <span class="n">headers</span><span class="o">=</span><span class="p">{</span><span class="s2">"User-Agent"</span><span class="p">:</span> <span class="s2">"DATASCI530 educational project"</span><span class="p">},</span>
-                <span class="n">timeout</span><span class="o">=</span><span class="mi">60</span>
+            <span class="n">text</span><span class="p">,</span> <span class="n">details</span> <span class="o">=</span> <span class="n">readers</span><span class="p">[</span><span class="n">kind</span><span class="p">](</span><span class="n">path</span><span class="p">)</span>
+            <span class="n">record</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">details</span><span class="p">,</span> <span class="n">extracted_text</span><span class="o">=</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="n">record</span><span class="p">[</span><span class="s2">"extraction_status"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">"Extracted"</span> <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">else</span> <span class="s2">"No text extracted"</span>
             <span class="p">)</span>
-            <span class="n">response</span><span class="o">.</span><span class="n">raise_for_status</span><span class="p">()</span>
-            <span class="n">path</span><span class="o">.</span><span class="n">write_bytes</span><span class="p">(</span><span class="n">response</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
-            <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
 
-        <span class="n">text</span><span class="p">,</span> <span class="n">details</span> <span class="o">=</span> <span class="n">readers</span><span class="p">[</span><span class="n">kind</span><span class="p">](</span><span class="n">path</span><span class="p">)</span>
-        <span class="n">record</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">details</span><span class="p">,</span> <span class="n">extracted_text</span><span class="o">=</span><span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="ow">or</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">record</span><span class="p">[</span><span class="s2">"extraction_status"</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="s2">"Extracted"</span> <span class="k">if</span> <span class="n">text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span> <span class="k">else</span> <span class="s2">"No text extracted"</span>
-        <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">record</span><span class="p">[</span><span class="s2">"extraction_status"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Failed: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span>
 
-    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
-        <span class="n">record</span><span class="p">[</span><span class="s2">"extraction_status"</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"Failed: </span><span class="si">{</span><span class="nb">type</span><span class="p">(</span><span class="n">error</span><span class="p">)</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">"</span>
+        <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
 
-    <span class="n">records</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">record</span><span class="p">)</span>
-
-<span class="n">content_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
+    <span class="n">content_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">records</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -7840,7 +7843,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Build-and-Check-the-Three-Final-Datasets">Build and Check the Three Final Datasets<a class="anchor-link" href="#Build-and-Check-the-Three-Final-Datasets">¶</a></h2>
+<h2 id="Build-and-Check-the-Three-Final-Datasets">Build and Check the Three Final Datasets<a class="anchor-link" href="#Build-and-Check-the-Three-Final-Datasets">¶</a></h2><p>Study samples with the same URL are combined into one file record and joined to the extracted contents. PDF and Excel records are separated into their own datasets. Quality checks confirm unique source URLs and complete product information.</p>
 </div>
 </div>
 </div>
@@ -7852,33 +7855,34 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="c1"># One record per unique file; labels of cards that share a file are kept together</span>
-<span class="n">files_final</span> <span class="o">=</span> <span class="n">linked</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"sample_url"</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>
-    <span class="n">product_name</span><span class="o">=</span><span class="p">(</span><span class="s2">"product_name"</span><span class="p">,</span> <span class="s2">"first"</span><span class="p">),</span>
-    <span class="n">product_url</span><span class="o">=</span><span class="p">(</span><span class="s2">"product_url"</span><span class="p">,</span> <span class="s2">"first"</span><span class="p">),</span>
-    <span class="n">resource_type</span><span class="o">=</span><span class="p">(</span><span class="s2">"resource_type"</span><span class="p">,</span> <span class="s2">"first"</span><span class="p">),</span>
-    <span class="n">collection_date</span><span class="o">=</span><span class="p">(</span><span class="s2">"collection_date"</span><span class="p">,</span> <span class="s2">"first"</span><span class="p">),</span>
-    <span class="n">sample_label</span><span class="o">=</span><span class="p">(</span><span class="s2">"sample_label"</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="s2">" | "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">s</span><span class="p">))),</span>
-<span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">content_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">"sample_url"</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="s2">"one_to_one"</span><span class="p">)</span>
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">if</span> <span class="n">COLLECT_NEW_DATA</span><span class="p">:</span>
+    <span class="c1"># One record per unique file (labels of cards that share a file are kept together)</span>
+    <span class="n">files_final</span> <span class="o">=</span> <span class="n">linked</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"sample_url"</span><span class="p">,</span> <span class="n">sort</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+        <span class="n">product_name</span><span class="o">=</span><span class="p">(</span><span class="s2">"product_name"</span><span class="p">,</span> <span class="s2">"first"</span><span class="p">),</span>
+        <span class="n">product_url</span><span class="o">=</span><span class="p">(</span><span class="s2">"product_url"</span><span class="p">,</span> <span class="s2">"first"</span><span class="p">),</span>
+        <span class="n">resource_type</span><span class="o">=</span><span class="p">(</span><span class="s2">"resource_type"</span><span class="p">,</span> <span class="s2">"first"</span><span class="p">),</span>
+        <span class="n">collection_date</span><span class="o">=</span><span class="p">(</span><span class="s2">"collection_date"</span><span class="p">,</span> <span class="s2">"first"</span><span class="p">),</span>
+        <span class="n">sample_label</span><span class="o">=</span><span class="p">(</span><span class="s2">"sample_label"</span><span class="p">,</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="s2">" | "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">dict</span><span class="o">.</span><span class="n">fromkeys</span><span class="p">(</span><span class="n">s</span><span class="p">))),</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">content_df</span><span class="p">,</span> <span class="n">on</span><span class="o">=</span><span class="s2">"sample_url"</span><span class="p">,</span> <span class="n">how</span><span class="o">=</span><span class="s2">"left"</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="s2">"one_to_one"</span><span class="p">)</span>
 
-<span class="n">common</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"product_name"</span><span class="p">,</span> <span class="s2">"sample_label"</span><span class="p">,</span> <span class="s2">"sample_url"</span><span class="p">,</span> <span class="s2">"product_url"</span><span class="p">,</span> <span class="s2">"collection_date"</span><span class="p">,</span>
-          <span class="s2">"content_collection_date"</span><span class="p">,</span> <span class="s2">"extraction_status"</span><span class="p">,</span> <span class="s2">"extracted_text"</span><span class="p">]</span>
-<span class="n">pdf_samples</span> <span class="o">=</span> <span class="n">files_final</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
-    <span class="n">files_final</span><span class="p">[</span><span class="s2">"resource_type"</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">"PDF"</span><span class="p">)</span>
-<span class="p">]</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">common</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"page_count"</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
-<span class="n">excel_samples</span> <span class="o">=</span> <span class="n">files_final</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
-    <span class="n">files_final</span><span class="p">[</span><span class="s2">"resource_type"</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">"Excel"</span><span class="p">)</span>
-<span class="p">]</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span>
-    <span class="n">columns</span><span class="o">=</span><span class="n">common</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"sheet_count"</span><span class="p">,</span> <span class="s2">"sheet_names"</span><span class="p">,</span> <span class="s2">"formula_cells"</span><span class="p">]</span>
-<span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">common</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"product_name"</span><span class="p">,</span> <span class="s2">"sample_label"</span><span class="p">,</span> <span class="s2">"sample_url"</span><span class="p">,</span> <span class="s2">"product_url"</span><span class="p">,</span> <span class="s2">"collection_date"</span><span class="p">,</span>
+              <span class="s2">"content_collection_date"</span><span class="p">,</span> <span class="s2">"extraction_status"</span><span class="p">,</span> <span class="s2">"extracted_text"</span><span class="p">]</span>
+    <span class="n">pdf_samples</span> <span class="o">=</span> <span class="n">files_final</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="n">files_final</span><span class="p">[</span><span class="s2">"resource_type"</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">"PDF"</span><span class="p">)</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">common</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"page_count"</span><span class="p">])</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="n">excel_samples</span> <span class="o">=</span> <span class="n">files_final</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+        <span class="n">files_final</span><span class="p">[</span><span class="s2">"resource_type"</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="s2">"Excel"</span><span class="p">)</span>
+    <span class="p">]</span><span class="o">.</span><span class="n">reindex</span><span class="p">(</span>
+        <span class="n">columns</span><span class="o">=</span><span class="n">common</span> <span class="o">+</span> <span class="p">[</span><span class="s2">"sheet_count"</span><span class="p">,</span> <span class="s2">"sheet_names"</span><span class="p">,</span> <span class="s2">"formula_cells"</span><span class="p">]</span>
+    <span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
 
-<span class="c1"># Quality checks</span>
-<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">products_final</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span> <span class="ow">and</span> <span class="n">products_final</span><span class="p">[</span><span class="s2">"product_url"</span><span class="p">]</span><span class="o">.</span><span class="n">is_unique</span>
-<span class="k">assert</span> <span class="n">products_final</span><span class="p">[[</span><span class="s2">"price"</span><span class="p">,</span> <span class="s2">"currency"</span><span class="p">,</span> <span class="s2">"duration_months"</span><span class="p">,</span> <span class="s2">"practice_exam_count"</span><span class="p">]]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
-<span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdf_samples</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">excel_samples</span><span class="p">)</span> <span class="o">==</span> <span class="n">linked</span><span class="p">[</span><span class="s2">"sample_url"</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
-<span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="p">(</span><span class="n">pdf_samples</span><span class="p">,</span> <span class="n">excel_samples</span><span class="p">):</span>
-    <span class="k">assert</span> <span class="n">frame</span><span class="p">[</span><span class="s2">"sample_url"</span><span class="p">]</span><span class="o">.</span><span class="n">is_unique</span>
-    <span class="k">assert</span> <span class="n">frame</span><span class="p">[</span><span class="s2">"product_url"</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">products_final</span><span class="p">[</span><span class="s2">"product_url"</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="c1"># Quality checks</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">products_final</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span> <span class="ow">and</span> <span class="n">products_final</span><span class="p">[</span><span class="s2">"product_url"</span><span class="p">]</span><span class="o">.</span><span class="n">is_unique</span>
+    <span class="k">assert</span> <span class="n">products_final</span><span class="p">[[</span><span class="s2">"price"</span><span class="p">,</span> <span class="s2">"currency"</span><span class="p">,</span> <span class="s2">"duration_months"</span><span class="p">,</span> <span class="s2">"practice_exam_count"</span><span class="p">]]</span><span class="o">.</span><span class="n">notna</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdf_samples</span><span class="p">)</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">excel_samples</span><span class="p">)</span> <span class="o">==</span> <span class="n">linked</span><span class="p">[</span><span class="s2">"sample_url"</span><span class="p">]</span><span class="o">.</span><span class="n">nunique</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">frame</span> <span class="ow">in</span> <span class="p">(</span><span class="n">pdf_samples</span><span class="p">,</span> <span class="n">excel_samples</span><span class="p">):</span>
+        <span class="k">assert</span> <span class="n">frame</span><span class="p">[</span><span class="s2">"sample_url"</span><span class="p">]</span><span class="o">.</span><span class="n">is_unique</span>
+        <span class="k">assert</span> <span class="n">frame</span><span class="p">[</span><span class="s2">"product_url"</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">products_final</span><span class="p">[</span><span class="s2">"product_url"</span><span class="p">])</span><span class="o">.</span><span class="n">all</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -7891,7 +7895,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Results">Results<a class="anchor-link" href="#Results">¶</a></h2><h3 id="Table-1.-Exam-Preparation-Course-Overview">Table 1. Exam Preparation Course Overview<a class="anchor-link" href="#Table-1.-Exam-Preparation-Course-Overview">¶</a></h3><p>Prices are shown in their original currencies. The extension is conditional; seven months of standard access should not be read as thirteen months of guaranteed access.</p>
+<h2 id="Results">Results<a class="anchor-link" href="#Results">¶</a></h2><h3 id="Table-1.-Exam-Preparation-Course-Overview">Table 1. Exam Preparation Course Overview<a class="anchor-link" href="#Table-1.-Exam-Preparation-Course-Overview">¶</a></h3><p>This table gives an overview of the key product features such as exam, price, currency, access, number of original practice exams, and a one-time conditional extension period.</p>
 </div>
 </div>
 </div>
@@ -7905,10 +7909,10 @@ a.anchor-link {
 <div class="cm-editor cm-s-jupyter">
 <div class="highlight hl-ipython3"><pre><span></span><span class="n">overview</span> <span class="o">=</span> <span class="n">products_final</span><span class="p">[[</span><span class="s2">"product_name"</span><span class="p">,</span> <span class="s2">"price"</span><span class="p">,</span> <span class="s2">"currency"</span><span class="p">,</span> <span class="s2">"duration_months"</span><span class="p">,</span>
                            <span class="s2">"practice_exam_count"</span><span class="p">,</span> <span class="s2">"free_extension_months"</span><span class="p">]]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
-    <span class="s2">"product_name"</span><span class="p">:</span> <span class="s2">"Exam prep course"</span><span class="p">,</span> <span class="s2">"price"</span><span class="p">:</span> <span class="s2">"Listed price"</span><span class="p">,</span> <span class="s2">"currency"</span><span class="p">:</span> <span class="s2">"Currency"</span><span class="p">,</span>
-    <span class="s2">"duration_months"</span><span class="p">:</span> <span class="s2">"Access (months)"</span><span class="p">,</span> <span class="s2">"practice_exam_count"</span><span class="p">:</span> <span class="s2">"Original practice exams"</span><span class="p">,</span>
-    <span class="s2">"free_extension_months"</span><span class="p">:</span> <span class="s2">"Conditional extension (months)"</span><span class="p">})</span>
-<span class="n">overview</span><span class="p">[</span><span class="s2">"Listed price"</span><span class="p">]</span> <span class="o">=</span> <span class="n">overview</span><span class="p">[</span><span class="s2">"Listed price"</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="s2">"</span><span class="si">{:,.2f}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+    <span class="s2">"product_name"</span><span class="p">:</span> <span class="s2">"Exam Prep Course"</span><span class="p">,</span> <span class="s2">"price"</span><span class="p">:</span> <span class="s2">"Listed Price"</span><span class="p">,</span> <span class="s2">"currency"</span><span class="p">:</span> <span class="s2">"Currency"</span><span class="p">,</span>
+    <span class="s2">"duration_months"</span><span class="p">:</span> <span class="s2">"Access (Months)"</span><span class="p">,</span> <span class="s2">"practice_exam_count"</span><span class="p">:</span> <span class="s2">"Original Practice Exams"</span><span class="p">,</span>
+    <span class="s2">"free_extension_months"</span><span class="p">:</span> <span class="s2">"Conditional Extension (Months)"</span><span class="p">})</span>
+<span class="n">overview</span><span class="p">[</span><span class="s2">"Listed Price"</span><span class="p">]</span> <span class="o">=</span> <span class="n">overview</span><span class="p">[</span><span class="s2">"Listed Price"</span><span class="p">]</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="s2">"</span><span class="si">{:,.2f}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
 <span class="n">show_table</span><span class="p">(</span><span class="n">overview</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -7922,15 +7926,15 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<style>.report-table table{border-collapse:collapse;width:100%;font-size:13px}.report-table th{background:#eaf0f7;color:#183e60;text-align:left}.report-table th,.report-table td{padding:9px;border-bottom:1px solid #dce3eb;white-space:normal}.report-table tr:nth-child(even){background:#f7f9fb}</style><div class="report-table"><table class="dataframe">
+<style>.report-table table{border-collapse:collapse;width:100%;font-size:13px}.report-table th{background:#eaf0f7;color:#183e60;text-align:center!important}.report-table th,.report-table td{padding:9px;border-bottom:1px solid #dce3eb;white-space:normal;text-align:center!important}.report-table tr:nth-child(even){background:#f7f9fb}</style><div class="report-table"><table class="dataframe">
 <thead>
 <tr style="text-align: right;">
-<th>Exam prep course</th>
-<th>Listed price</th>
+<th>Exam Prep Course</th>
+<th>Listed Price</th>
 <th>Currency</th>
-<th>Access (months)</th>
-<th>Original practice exams</th>
-<th>Conditional extension (months)</th>
+<th>Access (Months)</th>
+<th>Original Practice Exams</th>
+<th>Conditional Extension (Months)</th>
 </tr>
 </thead>
 <tbody>
@@ -7995,7 +7999,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Table-2.-Dataset-Completeness">Table 2. Dataset Completeness<a class="anchor-link" href="#Table-2.-Dataset-Completeness">¶</a></h3><p>PDF and Excel measurements are stored separately so each dataset holds only relevant columns. A failed or empty extraction would appear in this table.</p>
+<h3 id="Table-2.-Dataset-Completeness">Table 2. Dataset Completeness<a class="anchor-link" href="#Table-2.-Dataset-Completeness">¶</a></h3><p>This table checks the completeness and uniqueness of the final datasets. Zero duplicate URLs means each file appears only once in the final dataset, this does not mean every website button led to a different file. Two Exam 5 sample material buttons linked to the same PDF, so their labels were combined into one file record retaining both sample material labels.</p>
 </div>
 </div>
 </div>
@@ -8011,9 +8015,9 @@ a.anchor-link {
     <span class="n">blank</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">col</span><span class="p">:</span> <span class="n">col</span><span class="o">.</span><span class="n">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">v</span><span class="o">.</span><span class="n">strip</span><span class="p">()))</span>
     <span class="n">failed</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">frame</span><span class="p">[</span><span class="s2">"extraction_status"</span><span class="p">]</span><span class="o">.</span><span class="n">ne</span><span class="p">(</span><span class="s2">"Extracted"</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span> <span class="k">if</span> <span class="s2">"extraction_status"</span> <span class="ow">in</span> <span class="n">frame</span> <span class="k">else</span> <span class="mi">0</span>
     <span class="k">return</span> <span class="p">{</span><span class="s2">"Dataset"</span><span class="p">:</span> <span class="n">name</span><span class="p">,</span> <span class="s2">"Observations"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">frame</span><span class="p">),</span>
-            <span class="s2">"Missing/blank cells"</span><span class="p">:</span> <span class="nb">int</span><span class="p">((</span><span class="n">frame</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">|</span> <span class="n">blank</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
-            <span class="s2">"Duplicate source URLs"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">frame</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
-            <span class="s2">"Failed extractions"</span><span class="p">:</span> <span class="n">failed</span><span class="p">}</span>
+            <span class="s2">"Missing or Blank Cells"</span><span class="p">:</span> <span class="nb">int</span><span class="p">((</span><span class="n">frame</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span> <span class="o">|</span> <span class="n">blank</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+            <span class="s2">"Duplicate Source URLs"</span><span class="p">:</span> <span class="nb">int</span><span class="p">(</span><span class="n">frame</span><span class="p">[</span><span class="n">key</span><span class="p">]</span><span class="o">.</span><span class="n">duplicated</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">()),</span>
+            <span class="s2">"Failed Extractions"</span><span class="p">:</span> <span class="n">failed</span><span class="p">}</span>
 
 
 <span class="n">show_table</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span>
@@ -8032,14 +8036,14 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<style>.report-table table{border-collapse:collapse;width:100%;font-size:13px}.report-table th{background:#eaf0f7;color:#183e60;text-align:left}.report-table th,.report-table td{padding:9px;border-bottom:1px solid #dce3eb;white-space:normal}.report-table tr:nth-child(even){background:#f7f9fb}</style><div class="report-table"><table class="dataframe">
+<style>.report-table table{border-collapse:collapse;width:100%;font-size:13px}.report-table th{background:#eaf0f7;color:#183e60;text-align:center!important}.report-table th,.report-table td{padding:9px;border-bottom:1px solid #dce3eb;white-space:normal;text-align:center!important}.report-table tr:nth-child(even){background:#f7f9fb}</style><div class="report-table"><table class="dataframe">
 <thead>
 <tr style="text-align: right;">
 <th>Dataset</th>
 <th>Observations</th>
-<th>Missing/blank cells</th>
-<th>Duplicate source URLs</th>
-<th>Failed extractions</th>
+<th>Missing or Blank Cells</th>
+<th>Duplicate Source URLs</th>
+<th>Failed Extractions</th>
 </tr>
 </thead>
 <tbody>
@@ -8077,9 +8081,8 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Data-Quality">Data Quality<a class="anchor-link" href="#Data-Quality">¶</a></h2><p>The collection contains six products and 25 advertised sample cards. Sixteen cards link to 15 unique non-video files: nine PDFs and six Excel workbooks. Two Exam 5 cards share one PDF, so their labels are kept together in one record. The eight video cards were excluded from downloads. One Exam 9 card is marked "Coming Soon" and has no URL, so it is not counted as an available file.</p>
-<p>All 15 files yielded text. Excel text covers every worksheet; worksheet counts include instruction and contents sheets, not only practice questions. Sample size and structure do not measure course quality or coverage.</p>
-<p>Checks in the code confirm six unique product URLs, no missing core product fields, unique file URLs, that every file links to a product, and that the file count matches the unique linked URLs. Exam 5's price, access period, conditional extension, and practice-exam count were also compared with my manual collection. Currency is stored separately from the numeric price.</p>
+<h2 id="Data-Quality-Results">Data Quality Results<a class="anchor-link" href="#Data-Quality-Results">¶</a></h2><p>Six products and 25 advertised sample materials were included. 16 buttons link to 15 unique downloadable files: nine PDF files and six Excel workbooks. Eight video cards were excluded from downloads, and one Exam 9 card marked "Coming Soon" had no donwnloadable URL available. Text was extracted from all 15 files.</p>
+<p>Code checks confirmed six unique product URLs, no missing core product fields, unique sample URLs, and valid links between samples and products. Final file counts also matched the unique PDF and Excel URLs collected. The currency unit was separated from the price variable to avoid confusion between USD and CAD currencies.</p>
 </div>
 </div>
 </div>
@@ -8090,7 +8093,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Table-3.-Numeric-Summaries">Table 3. Numeric Summaries<a class="anchor-link" href="#Table-3.-Numeric-Summaries">¶</a></h3><p>Variances are sample variances. Price variances are in squared currency units. The CAD variance is undefined with one observation.</p>
+<h3 id="Table-3.-Numeric-Summaries">Table 3. Numeric Summaries<a class="anchor-link" href="#Table-3.-Numeric-Summaries">¶</a></h3><p>This table gives some further descriptive statistics on our measured variables by reporting the mean and sample variance of prices, study guide access duration, and number of original practice exams.</p>
 </div>
 </div>
 </div>
@@ -8107,7 +8110,7 @@ a.anchor-link {
 
 <span class="k">def</span> <span class="nf">summarize</span><span class="p">(</span><span class="n">label</span><span class="p">,</span> <span class="n">values</span><span class="p">):</span>
     <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"Measure"</span><span class="p">:</span> <span class="n">label</span><span class="p">,</span> <span class="s2">"Observations"</span><span class="p">:</span> <span class="n">values</span><span class="o">.</span><span class="n">count</span><span class="p">(),</span> <span class="s2">"Missing"</span><span class="p">:</span> <span class="n">values</span><span class="o">.</span><span class="n">isna</span><span class="p">()</span><span class="o">.</span><span class="n">sum</span><span class="p">(),</span>
-                 <span class="s2">"Mean"</span><span class="p">:</span> <span class="n">values</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="s2">"Sample variance"</span><span class="p">:</span> <span class="n">values</span><span class="o">.</span><span class="n">var</span><span class="p">()})</span>
+                 <span class="s2">"Mean"</span><span class="p">:</span> <span class="n">values</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="s2">"Sample Variance"</span><span class="p">:</span> <span class="n">values</span><span class="o">.</span><span class="n">var</span><span class="p">()})</span>
 
 
 <span class="k">for</span> <span class="n">currency</span><span class="p">,</span> <span class="n">group</span> <span class="ow">in</span> <span class="n">products_final</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s2">"currency"</span><span class="p">):</span>  <span class="c1"># prices are never mixed across currencies</span>
@@ -8129,14 +8132,14 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<style>.report-table table{border-collapse:collapse;width:100%;font-size:13px}.report-table th{background:#eaf0f7;color:#183e60;text-align:left}.report-table th,.report-table td{padding:9px;border-bottom:1px solid #dce3eb;white-space:normal}.report-table tr:nth-child(even){background:#f7f9fb}</style><div class="report-table"><table class="dataframe">
+<style>.report-table table{border-collapse:collapse;width:100%;font-size:13px}.report-table th{background:#eaf0f7;color:#183e60;text-align:center!important}.report-table th,.report-table td{padding:9px;border-bottom:1px solid #dce3eb;white-space:normal;text-align:center!important}.report-table tr:nth-child(even){background:#f7f9fb}</style><div class="report-table"><table class="dataframe">
 <thead>
 <tr style="text-align: right;">
 <th>Measure</th>
 <th>Observations</th>
 <th>Missing</th>
 <th>Mean</th>
-<th>Sample variance</th>
+<th>Sample Variance</th>
 </tr>
 </thead>
 <tbody>
@@ -8188,7 +8191,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Table-4.-Selected-Study-Tools">Table 4. Selected Study Tools<a class="anchor-link" href="#Table-4.-Selected-Study-Tools">¶</a></h3><p>These indicators capture mentions, not verified availability. Features common to all courses remain in the description text rather than in repeated indicator columns.</p>
+<h3 id="Table-4.-Public-PDF-and-Excel-Samples-by-Course">Table 4. Public PDF and Excel Samples by Course<a class="anchor-link" href="#Table-4.-Public-PDF-and-Excel-Samples-by-Course">¶</a></h3><p>This table counts the unique PDF and Excel samples available for each course. Page and worksheet counts are listed for each file.</p>
 </div>
 </div>
 </div>
@@ -8200,107 +8203,22 @@ a.anchor-link {
 <div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
 <div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
 <div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="n">tools</span> <span class="o">=</span> <span class="n">products_final</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"product_name"</span><span class="p">)[</span><span class="nb">list</span><span class="p">(</span><span class="n">tool_patterns</span><span class="p">)]</span><span class="o">.</span><span class="n">rename</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">{</span>
-    <span class="s2">"instructional_video_mentioned"</span><span class="p">:</span> <span class="s2">"Instructional videos"</span><span class="p">,</span>
-    <span class="s2">"formula_summary_sheet_mentioned"</span><span class="p">:</span> <span class="s2">"Formula/summary sheets"</span><span class="p">,</span>
-    <span class="s2">"hybrid_exam_mentioned"</span><span class="p">:</span> <span class="s2">"Hybrid exam"</span><span class="p">})</span>
-<span class="n">tools</span> <span class="o">=</span> <span class="n">tools</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">col</span><span class="p">:</span> <span class="n">col</span><span class="o">.</span><span class="n">map</span><span class="p">({</span><span class="kc">True</span><span class="p">:</span> <span class="s2">"Mentioned"</span><span class="p">,</span> <span class="kc">False</span><span class="p">:</span> <span class="s2">"Not matched"</span><span class="p">}))</span>
-<span class="n">show_table</span><span class="p">(</span><span class="n">tools</span><span class="o">.</span><span class="n">rename_axis</span><span class="p">(</span><span class="s2">"Exam prep course"</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell-outputWrapper">
-<div class="jp-Collapser jp-OutputCollapser jp-Cell-outputCollapser">
-</div>
-<div class="jp-OutputArea jp-Cell-outputArea">
-<div class="jp-OutputArea-child">
-<div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
-<div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<style>.report-table table{border-collapse:collapse;width:100%;font-size:13px}.report-table th{background:#eaf0f7;color:#183e60;text-align:left}.report-table th,.report-table td{padding:9px;border-bottom:1px solid #dce3eb;white-space:normal}.report-table tr:nth-child(even){background:#f7f9fb}</style><div class="report-table"><table class="dataframe">
-<thead>
-<tr style="text-align: right;">
-<th>Exam prep course</th>
-<th>Instructional videos</th>
-<th>Formula/summary sheets</th>
-<th>Hybrid exam</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CAS Exam 5</td>
-<td>Mentioned</td>
-<td>Mentioned</td>
-<td>Not matched</td>
-</tr>
-<tr>
-<td>CAS Exam 6C</td>
-<td>Not matched</td>
-<td>Not matched</td>
-<td>Not matched</td>
-</tr>
-<tr>
-<td>CAS Exam 6U</td>
-<td>Mentioned</td>
-<td>Mentioned</td>
-<td>Not matched</td>
-</tr>
-<tr>
-<td>CAS Exam 7</td>
-<td>Not matched</td>
-<td>Mentioned</td>
-<td>Mentioned</td>
-</tr>
-<tr>
-<td>CAS Exam 8</td>
-<td>Not matched</td>
-<td>Not matched</td>
-<td>Mentioned</td>
-</tr>
-<tr>
-<td>CAS Exam 9</td>
-<td>Not matched</td>
-<td>Not matched</td>
-<td>Mentioned</td>
-</tr>
-</tbody>
-</table></div>
-</div>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 id="Table-5.-Public-PDF-and-Excel-Samples-by-Course">Table 5. Public PDF and Excel Samples by Course<a class="anchor-link" href="#Table-5.-Public-PDF-and-Excel-Samples-by-Course">¶</a></h3><p>Counts refer to unique files, not advertised cards. Page and worksheet ranges describe the available samples, not the size or quality of the paid course.</p>
-</div>
-</div>
-</div>
-</div><div class="jp-Cell jp-CodeCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea">
-<div class="jp-InputPrompt jp-InputArea-prompt">In [ ]:</div>
-<div class="jp-CodeMirrorEditor jp-Editor jp-InputArea-editor" data-type="inline">
-<div class="cm-editor cm-s-jupyter">
-<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">span</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
-    <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
-    <span class="k">return</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">min</span><span class="p">())</span><span class="si">}</span><span class="s2">–</span><span class="si">{</span><span class="nb">int</span><span class="p">(</span><span class="n">values</span><span class="o">.</span><span class="n">max</span><span class="p">())</span><span class="si">}</span><span class="s2">"</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="k">else</span> <span class="s2">"—"</span>
-
+<div class="highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">file_counts</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+    <span class="n">values</span> <span class="o">=</span> <span class="n">values</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span><span class="o">.</span><span class="n">sort_values</span><span class="p">()</span>
+    <span class="k">return</span> <span class="s2">", "</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">))</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">values</span><span class="p">)</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="k">else</span> <span class="s2">"0"</span>
 
 <span class="n">rows</span> <span class="o">=</span> <span class="p">[]</span>
 <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">products_final</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
     <span class="n">pdfs</span> <span class="o">=</span> <span class="n">pdf_samples</span><span class="p">[</span><span class="n">pdf_samples</span><span class="p">[</span><span class="s2">"product_url"</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="s2">"product_url"</span><span class="p">])]</span>
     <span class="n">books</span> <span class="o">=</span> <span class="n">excel_samples</span><span class="p">[</span><span class="n">excel_samples</span><span class="p">[</span><span class="s2">"product_url"</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="s2">"product_url"</span><span class="p">])]</span>
-    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span><span class="s2">"Exam prep course"</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="s2">"product_name"</span><span class="p">],</span>
-                 <span class="s2">"PDF files"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdfs</span><span class="p">),</span> <span class="s2">"PDF pages (range)"</span><span class="p">:</span> <span class="n">span</span><span class="p">(</span><span class="n">pdfs</span><span class="p">[</span><span class="s2">"page_count"</span><span class="p">]),</span>
-                 <span class="s2">"Excel files"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">books</span><span class="p">),</span> <span class="s2">"Worksheets (range)"</span><span class="p">:</span> <span class="n">span</span><span class="p">(</span><span class="n">books</span><span class="p">[</span><span class="s2">"sheet_count"</span><span class="p">])})</span>
+    <span class="n">rows</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s2">"Exam Prep Course"</span><span class="p">:</span> <span class="n">p</span><span class="p">[</span><span class="s2">"product_name"</span><span class="p">],</span>
+        <span class="s2">"PDF Files"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">pdfs</span><span class="p">),</span>
+        <span class="s2">"PDF Pages (Per File)"</span><span class="p">:</span> <span class="n">file_counts</span><span class="p">(</span><span class="n">pdfs</span><span class="p">[</span><span class="s2">"page_count"</span><span class="p">]),</span>
+        <span class="s2">"Excel Files"</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">books</span><span class="p">),</span>
+        <span class="s2">"Worksheets (Per File)"</span><span class="p">:</span> <span class="n">file_counts</span><span class="p">(</span><span class="n">books</span><span class="p">[</span><span class="s2">"sheet_count"</span><span class="p">])</span>
+    <span class="p">})</span>
+
 <span class="n">show_table</span><span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">rows</span><span class="p">))</span>
 </pre></div>
 </div>
@@ -8314,58 +8232,58 @@ a.anchor-link {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<style>.report-table table{border-collapse:collapse;width:100%;font-size:13px}.report-table th{background:#eaf0f7;color:#183e60;text-align:left}.report-table th,.report-table td{padding:9px;border-bottom:1px solid #dce3eb;white-space:normal}.report-table tr:nth-child(even){background:#f7f9fb}</style><div class="report-table"><table class="dataframe">
+<style>.report-table table{border-collapse:collapse;width:100%;font-size:13px}.report-table th{background:#eaf0f7;color:#183e60;text-align:center!important}.report-table th,.report-table td{padding:9px;border-bottom:1px solid #dce3eb;white-space:normal;text-align:center!important}.report-table tr:nth-child(even){background:#f7f9fb}</style><div class="report-table"><table class="dataframe">
 <thead>
 <tr style="text-align: right;">
-<th>Exam prep course</th>
-<th>PDF files</th>
-<th>PDF pages (range)</th>
-<th>Excel files</th>
-<th>Worksheets (range)</th>
+<th>Exam Prep Course</th>
+<th>PDF Files</th>
+<th>PDF Pages (Per File)</th>
+<th>Excel Files</th>
+<th>Worksheets (Per File)</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>CAS Exam 5</td>
 <td>2</td>
-<td>2–17</td>
+<td>2, 17</td>
 <td>1</td>
-<td>32–32</td>
+<td>32</td>
 </tr>
 <tr>
 <td>CAS Exam 6C</td>
 <td>1</td>
-<td>7–7</td>
+<td>7</td>
 <td>1</td>
-<td>11–11</td>
+<td>11</td>
 </tr>
 <tr>
 <td>CAS Exam 6U</td>
 <td>2</td>
-<td>2–5</td>
+<td>2, 5</td>
 <td>2</td>
-<td>3–29</td>
+<td>3, 29</td>
 </tr>
 <tr>
 <td>CAS Exam 7</td>
 <td>2</td>
-<td>2–9</td>
+<td>2, 9</td>
 <td>1</td>
-<td>4–4</td>
+<td>4</td>
 </tr>
 <tr>
 <td>CAS Exam 8</td>
 <td>1</td>
-<td>6–6</td>
+<td>6</td>
 <td>1</td>
-<td>16–16</td>
+<td>16</td>
 </tr>
 <tr>
 <td>CAS Exam 9</td>
 <td>1</td>
-<td>7–7</td>
+<td>7</td>
 <td>0</td>
-<td>—</td>
+<td>0</td>
 </tr>
 </tbody>
 </table></div>
@@ -8380,20 +8298,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Discussion">Discussion<a class="anchor-link" href="#Discussion">¶</a></h2><p>Five courses are priced in USD, averaging $900; Exam 6C is listed separately at CAD 1,000. All six list seven months of standard access and a conditional six-month extension. Original practice-exam counts range from one to four.</p>
-<p>Mentions of instructional videos, formula/summary sheets, and hybrid exams differ across courses. The 25 sample cards include 24 with listed destinations and one "Coming Soon" card. Text was extracted from all 15 unique linked PDF and Excel files (16 cards), ready for later content comparisons.</p>
-<p>These data describe one provider at one point in time. Advertised features and sample excerpts do not measure course quality, exam difficulty, or student outcomes, and sample sizes and document structures are not comparable measures of coverage.</p>
-</div>
-</div>
-</div>
-</div>
-<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
-<div class="jp-Cell-inputWrapper" tabindex="0">
-<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
-</div>
-<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
-</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h2 id="Export-Final-Datasets">Export Final Datasets<a class="anchor-link" href="#Export-Final-Datasets">¶</a></h2><p>The submission datasets are Products, PDF Samples, and Excel Samples.</p>
+<h2 id="Export-Final-Datasets">Export Final Datasets<a class="anchor-link" href="#Export-Final-Datasets">¶</a></h2><p>The three final datasets are saved as CSV files for submission and will be used in Project 2.</p>
 </div>
 </div>
 </div>
@@ -8410,6 +8315,18 @@ a.anchor-link {
 <span class="n">excel_samples</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">"battleacts_excel_samples.csv"</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
 </pre></div>
 </div>
+</div>
+</div>
+</div>
+</div>
+<div class="jp-Cell jp-MarkdownCell jp-Notebook-cell">
+<div class="jp-Cell-inputWrapper" tabindex="0">
+<div class="jp-Collapser jp-InputCollapser jp-Cell-inputCollapser">
+</div>
+<div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
+</div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
+<h2 id="Discussion">Discussion<a class="anchor-link" href="#Discussion">¶</a></h2><p>Five courses are priced in USD, averaging $900 for seven months of access to an exam study preparation tool. Exam 6C is the only one priced in CAD at 1,000. All six have a one-time six-month extension of access should a student fail or not sit for an exam. Original practice exam counts range from one to four per exam study platform, with Exam 5 having the most and Exam 6C the least.</p>
+<p>The 25 sample cards include 24 with listed destinations and one "Coming Soon" card for Exam 9's material. Text was extracted from all 15 unique linked PDF and Excel files for future analysis. Advertised features and sample excerpts do not measure course quality, exam difficulty, or student outcomes, and sample sizes and document structures are not comparable measures of coverage.</p>
 </div>
 </div>
 </div>

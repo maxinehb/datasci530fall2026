@@ -7492,7 +7492,7 @@ a.anchor-link {
 <h3 id="Key-Findings">Key Findings<a class="anchor-link" href="#Key-Findings">¶</a></h3><ul>
 <li>Study-manual samples are available for all six exams, but their readable text lengths differ substantially.</li>
 <li>Frequent phrases distinguish the samples: examples include “increased limits” in Exam 5, “residual market” in Exam 6U, and “structured finance” in Exam 9.</li>
-<li>Exams 5 and 7 have the highest vocabulary overlap among the manual samples, sharing approximately 20.5% of their combined distinct cleaned words.</li>
+<li>Exams 5 and 7 have the highest vocabulary overlap among the manual samples, sharing approximately 23.1% of their combined distinct cleaned words.</li>
 <li>Public sample availability differs by exam: formula summaries are available for three exams and workbooks for five. These differences describe the public samples, not the completeness or quality of the full courses.</li>
 </ul>
 </div>
@@ -7624,7 +7624,7 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="Data-Sources-and-Project-1-Revisions">Data Sources and Project 1 Revisions<a class="anchor-link" href="#Data-Sources-and-Project-1-Revisions">¶</a></h2><p>BattleActs granted written permission for the one-time educational collection. This project imports the saved Project 1 datasets and processes the previously downloaded sample files.</p>
-<p>Project 1 feedback identified problems when the CSVs of the extracted text from the PDF and Excel file sample materials were opened in Excel. Some document text exceeded Excel’s limit of 32,767 characters per cell. For the CSV of the extracted text from the PDF sample materials (<code>battleacts_pdf_sample</code>), it appears that the content of the first listed exam was incorrectly parsed and filled many of the entries of the spreadsheet. It seems that the other exams were parsed correctly and have a clear format. The CSV containing extracted text from the Excel sample materials was more corrupted. I believe that CSV is not a sufficiently rich format to store this data, as it appears corrupted when the CSV is opened in Excel.</p>
+<p>Project 1 feedback identified text appearing in incorrect cells when the submitted CSVs were opened in Excel. Several extracted text fields exceeded Excel’s limit of 32,767 characters per cell, although the CSVs loaded with the expected structure in Python. The workbook extraction also contained formula expressions and Python object descriptions that were unsuitable for the language analysis.</p>
 <p>To address these issues, the analysis will look directly at the downloaded sample materials in their original PDF and Excel files rather than the CSV created in Project 1. PDF text is now organized by page and workbook text by worksheet. Spreadsheet formulas are counted separately and excluded from the language analysis. Numeric-only spreadsheet cells are also excluded because this analysis concerns written terminology rather than calculated answers. The exported text fields are checked for excessive length, and each CSV is examined and opened in Excel to confirm that its rows, columns, and text are preserved.</p>
 </div>
 </div>
@@ -7719,7 +7719,7 @@ a.anchor-link {
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="Extracting-Readable-Sample-Content">Extracting Readable Sample Content<a class="anchor-link" href="#Extracting-Readable-Sample-Content">¶</a></h2><p>Each PDF page and Excel worksheet becomes a separate record linked to its exam and source URL. Page counts, worksheet counts, and formula counts are compared with the Project 1 metadata.</p>
 <p>Workbook cells containing formulas are excluded from the extracted narrative text. Text from instruction sheets, contents sheets, and score grids is retained in the exported data but excluded from vocabulary comparisons. The remaining worksheets are used for analysis.</p>
-<p>This approach preserves the original files for reference while producing smaller text records that are easier to inspect and analyze.</p>
+<p>The checks accounted for all 15 files, including 57 PDF pages and 95 worksheets, and confirmed that the revised text contained no Python object descriptions. This approach preserves the original files for reference while producing smaller text records that are easier to inspect and analyze.</p>
 </div>
 </div>
 </div>
@@ -8435,7 +8435,7 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Exams 5 and 7 have the highest manual vocabulary similarity, at approximately 20.5%, followed by Exams 7 and 8 at approximately 19.1%. This is consistent with shared terminology involving losses, development, and insurance calculations, although the excerpts address different subjects.</p>
+<p>Exams 5 and 7 have the highest manual vocabulary similarity, at approximately 23.1%, followed by Exams 7 and 8 at approximately 22.2%. This is consistent with shared terminology involving losses, development, and insurance calculations, although the excerpts address different subjects.</p>
 <p>The percentages are sensitive to sample length, chapter selection, and cleaning rules. Low overlap does not imply that courses are unrelated, and high overlap does not establish that they teach the same material.</p>
 <h3 id="Figure-3.-Frequent-Phrases-in-Workbook-Samples">Figure 3. Frequent Phrases in Workbook Samples<a class="anchor-link" href="#Figure-3.-Frequent-Phrases-in-Workbook-Samples">¶</a></h3><p>The workbook comparison uses readable text from the non-administrative worksheets. Formula expressions and numeric-only cells are excluded. The two Exam 6U workbooks are combined for this exam-level summary.</p>
 <p>Exam 9 is absent because no public workbook was available in the collection.</p>
@@ -8497,7 +8497,7 @@ a.anchor-link {
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 id="Revised-Datasets-and-Reproducibility">Revised Datasets and Reproducibility<a class="anchor-link" href="#Revised-Datasets-and-Reproducibility">¶</a></h2><p>Three CSVs are exported: the product dataset, PDF text organized by page, and Excel text organized by worksheet. Original source URLs and collection timestamps are retained.</p>
 <p>The text datasets contain readable extracted content rather than reconstructed PDF tables or functioning spreadsheets. Original sample files remain the reference for layout, calculations, and mathematical notation.</p>
-<p>Whitespace is standardized for export, every text field is checked against a conservative 30,000-character limit, and each saved CSV is reopened to verify that its contents are unchanged. These checks improve spreadsheet compatibility without discarding text to fit a cell.</p>
+<p>Every text field is checked against a conservative 30,000-character limit, and each saved CSV is reopened to verify that its contents are unchanged. The <code>word_count</code> column measures cleaned text before stopword removal; the exported <code>extracted_text</code> retains the readable source extraction before navigation and footer removal.</p>
 </div>
 </div>
 </div>

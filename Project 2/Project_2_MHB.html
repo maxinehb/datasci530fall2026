@@ -7485,7 +7485,7 @@ a.anchor-link {
 <div style="text-align: center;">
 <h1>Comparing BattleActs’ Exam Preparation Samples</h1>
 <h3>DATASCI 530 — Project 2</h3>
-<p>Maxine Hakimi-Bulson</p>
+Maxine Hakimi-Bulson
 </div>
 <h2 id="Introduction">Introduction<a class="anchor-link" href="#Introduction">¶</a></h2><p>BattleActs provides study materials for actuarial candidates preparing for Casualty Actuarial Society (CAS) exams. This project builds on my Project 1 collection of six exam preparation courses, nine public PDF samples, and six Excel workbooks collected from the BattleActs website on October 19, 2026. BattleActs granted written permission for the one-time educational collection.</p>
 <p>The question this project aims to answer is: <strong>How do BattleActs’ public samples differ across exams in their length, frequent terminology, and shared vocabulary?</strong> In this report I compare the same type of sample materials across different exams and explore common terminology used, text length variation, and the most frequent terms mentioned with respect to each exam.</p>
@@ -7567,6 +7567,26 @@ a.anchor-link {
 <span class="s2">    max-width: 100%;</span>
 <span class="s2">    height: auto;</span>
 <span class="s2">}</span>
+<span class="s2">/* Center the contents of table and figure output containers */</span>
+<span class="s2">.jp-OutputArea-output.jp-RenderedHTMLCommon,</span>
+<span class="s2">.jp-OutputArea-output.jp-RenderedImage,</span>
+<span class="s2">.output_subarea {</span>
+<span class="s2">    text-align: center !important;</span>
+<span class="s2">}</span>
+
+<span class="s2">/* Override Jupyter's default table alignment */</span>
+<span class="s2">.jp-OutputArea-output.jp-RenderedHTMLCommon table.report-table {</span>
+<span class="s2">    float: none !important;</span>
+<span class="s2">    margin: 16px auto !important;</span>
+<span class="s2">}</span>
+
+<span class="s2">/* Center figure images */</span>
+<span class="s2">.jp-OutputArea-output.jp-RenderedImage img,</span>
+<span class="s2">.output_png img {</span>
+<span class="s2">    display: inline-block !important;</span>
+<span class="s2">    float: none !important;</span>
+<span class="s2">    margin: 0 auto !important;</span>
+<span class="s2">}</span>
 <span class="s2">&lt;/style&gt;</span>
 <span class="s2">"""</span><span class="p">))</span>
 
@@ -7611,6 +7631,26 @@ a.anchor-link {
 .output_png img, .jp-OutputArea-output img {
     max-width: 100%;
     height: auto;
+}
+/* Center the contents of table and figure output containers */
+.jp-OutputArea-output.jp-RenderedHTMLCommon,
+.jp-OutputArea-output.jp-RenderedImage,
+.output_subarea {
+    text-align: center !important;
+}
+
+/* Override Jupyter's default table alignment */
+.jp-OutputArea-output.jp-RenderedHTMLCommon table.report-table {
+    float: none !important;
+    margin: 16px auto !important;
+}
+
+/* Center figure images */
+.jp-OutputArea-output.jp-RenderedImage img,
+.output_png img {
+    display: inline-block !important;
+    float: none !important;
+    margin: 0 auto !important;
 }
 </style>
 </div>

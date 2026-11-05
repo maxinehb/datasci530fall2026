@@ -7496,7 +7496,7 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h2 style="color:#000000;">Predicting the Class Label</h2>
-<p>The Iris dataset contains measurements of three iris flower species. Each flower is described by four features: sepal length, sepal width, petal length, and petal width. In this analysis, I compare classification methods to see how well they use these measurements to correctly predict a flower’s species.</p>
+<p>The Iris dataset contains three iris flower species: Setosa, Versicolor, and Virginica. Each flower is described by four features: sepal length, sepal width, petal length, and petal width. In this analysis, I compare classification methods to see how well they use these feature measurements to correctly predict a flower’s species.</p>
 </div>
 </div>
 </div>
@@ -7512,11 +7512,11 @@ a.anchor-link {
 <ul>
 <li><p>The Iris dataset contains 150 flowers from three species, all equally represented.</p>
 </li>
-<li><p>All five models performed well. Naive Bayes had the highest average accuracy and macro F1, and the tuned SVM had the highest ROC AUC.</p>
+<li><p>All five models performed well, with Naive Bayes having the highest average accuracy and macro F1, and the tuned SVM having the highest ROC AUC.</p>
 </li>
-<li><p>When it came to flower misclassification, the tuned SVM and Keras neural network had the least overlap in errors, while the random forest and Naive Bayes had the most.</p>
+<li><p>When it came to flower misclassification, the tuned SVM and Keras neural network had the least overlap in errors, while the random forest and Naive Bayes had the most error overlap.</p>
 </li>
-<li><p>Naive Bayes is recommended for this dataset based on its accuracy and macro F1.</p>
+<li><p>Naive Bayes is recommended for this dataset based on its high accuracy and macro F1.</p>
 </li>
 </ul>
 </div>
@@ -7718,13 +7718,11 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<h3 style="color:#000000;"> Run a comparison of different machine learning methods </h3>
-<ul>
-<li>Evaluate the predictive performance using cross-validation. Consider more than one evaluation metric.</li>
-<li>Use the default tuning parameters for all methods except one (you choose). For this method, define a grid of tuning parameters and select the best-performing ones.</li>
-</ul>
-<p>I used the four flower measurements to predict iris species and compared a support vector machine (SVM), random forest, two neural networks, and Naive Bayes classifier. I evaluated each method using the same five stratified cross-validation folds and calculated average accuracy, macro F1, and one-versus-rest ROC AUC across the validation folds.</p>
-<p>I used the default tuning parameters for the random forest, Naive Bayes, and scikit-learn MLP classifier. The MLP’s default architecture has one hidden layer with 100 units. For the Keras neural network, I followed the Lecture 16 example by using a 16-unit hidden layer and training for 100 epochs, with an output layer adapted for the three iris species. For the SVM, I used a grid search with three-fold cross-validation to select C and gamma based on accuracy within each training fold. I standardized the predictors for the SVM and both neural networks using the relevant training data. I then ran the SVM grid search on the full dataset to select a final set of parameters.</p>
+<h3 style="color:#000000;"> Comparing different machine learning methods </h3>
+<p>I used the four flower measurements to predict iris species and compared a support vector machine (SVM), random forest, two neural networks, and Naive Bayes classifier. I evaluated all models using the same five stratified cross-validation folds, which maintained the proportion of each species across the folds. In each fold, the models were trained on 120 flowers and evaluated on the remaining 30. Each flower appeared in a validation set once.</p>
+<p>I calculated accuracy, macro F1, and one-versus-rest ROC AUC for each validation fold and averaged each metric across the five folds. Accuracy is the proportion classified correctly; macro F1 averages the class-specific F1 scores; and ROC AUC evaluates how well the predicted probabilities distinguish each species from the other two.</p>
+<p>I used the default tuning parameters for the random forest, Naive Bayes, and scikit-learn MLP classifier. The MLP has one hidden layer with 100 units. For the Keras neural network, I used a 16 unit hidden layer and training for 100 epochs, with a three unit output layer for the iris species.</p>
+<p>For the SVM, I tested a grid of C and gamma values using three-fold cross-validation within each outer training fold, selecting the combination with the highest average accuracy. I standardized the predictors for the SVM and both neural networks using only the relevant training data. After evaluating the models, I ran the SVM grid search on all 150 flowers to select a final set of parameters.</p>
 </div>
 </div>
 </div>
@@ -7750,7 +7748,7 @@ a.anchor-link {
     <span class="n">shuffle</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
 
-<span class="c1"># Define the SVM and scale its predictors</span>
+<span class="c1"># Scale SVM predictors and enable probabilities for ROC AUC</span>
 <span class="n">svm</span> <span class="o">=</span> <span class="n">make_pipeline</span><span class="p">(</span>
     <span class="n">StandardScaler</span><span class="p">(),</span>
     <span class="n">SVC</span><span class="p">(</span><span class="n">probability</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">0</span><span class="p">))</span>
@@ -7758,7 +7756,8 @@ a.anchor-link {
 <span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">"svc__C"</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
     <span class="s2">"svc__gamma"</span><span class="p">:</span> <span class="p">[</span><span class="s2">"scale"</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]}</span>
-<span class="c1"># Tune the SVM within each training fold</span>
+<span class="c1"># Within each outer training fold, use three-fold CV to choose</span>
+<span class="c1"># the C and gamma combination with the highest average accuracy</span>
 <span class="n">svm_tuned</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
     <span class="n">svm</span><span class="p">,</span>
     <span class="n">param_grid</span><span class="p">,</span>
@@ -7793,12 +7792,14 @@ a.anchor-link {
     <span class="s2">"Keras Neural Network"</span><span class="p">,</span>
     <span class="s2">"Naive Bayes"</span>
 <span class="p">]</span>
+<span class="c1"># Save each flower's validation prediction for the error-overlap heatmap</span>
 <span class="n">model_predictions</span> <span class="o">=</span> <span class="p">{</span>
     <span class="n">name</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">y</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">object</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">model_names</span>
 <span class="p">}</span>
 
-<span class="c1"># Repeat the analysis for each training/validation split</span>
+<span class="c1"># Repeat five times: train on 120 flowers and validate on 30</span>
+<span class="c1"># Each flower appears in a validation fold once</span>
 <span class="k">for</span> <span class="n">train_index</span><span class="p">,</span> <span class="n">test_index</span> <span class="ow">in</span> <span class="n">cv</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">X_train</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">train_index</span><span class="p">]</span>
     <span class="n">X_test</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="n">test_index</span><span class="p">]</span>
@@ -7925,8 +7926,7 @@ a.anchor-link {
     <span class="o">.</span><span class="n">set_caption</span><span class="p">(</span><span class="s2">"Five-Fold Cross-Validation Results by Model"</span><span class="p">)</span>
     <span class="o">.</span><span class="n">to_html</span><span class="p">()</span>
 <span class="p">)</span>
-
-<span class="c1"># Select final SVM parameters using the full dataset</span>
+<span class="c1"># Run the grid search on all 150 flowers to select final SVM settings</span>
 <span class="n">final_svm_grid</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span>
     <span class="n">svm</span><span class="p">,</span>
     <span class="n">param_grid</span><span class="p">,</span>
@@ -8049,7 +8049,8 @@ a.anchor-link {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>Naive Bayes had the highest average accuracy (96.0%) and macro F1 score (0.960), while the tuned SVM had the highest ROC AUC (0.998). Of the two neural networks, the MLP performed better on all three metrics than the Keras network in this comparison. The MLP’s results should be interpreted with caution because it reached its default iteration limit before converging in some folds. The final SVM grid search selected C = 10 and gamma = 0.1 from the values tested.</p>
+<p>Naive Bayes had the highest average accuracy (96.0%) and macro F1 score (0.960), while the tuned SVM had the highest ROC AUC (0.998). The MLP neural network performed better then the Keras neural network on all three metrics. The final SVM grid search using all observations selected C = 10 and gamma = 0.1 from the values tested.</p>
+<p>Note: A limitation of this result is that the MLP neural network’s reached its default iteration limit before converging in some folds.</p>
 </div>
 </div>
 </div>
@@ -8072,7 +8073,7 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 style="color:#000000;"> Do the classification methods tend to make mistakes on the same iris flowers? </h3>
-<p>I used cross-validation to obtain a prediction for each flower from each model, with each prediction made while that flower was in a validation fold. For each pair of models, I compared the flowers they classified incorrectly using Jaccard similarity: the number misclassified by both models divided by the number misclassified by at least one. I displayed the similarities in a heatmap, where values closer to 1 indicate greater overlap in errors.</p>
+<p>I used cross-validation to obtain a prediction for each flower from each model, with each prediction made while the flower was in a validation fold. For each pair of models, I compared the incorrectly-classified flowers using Jaccard similarity. This gives us the number misclassified by both models divided by the number misclassified by at least one, and these error similarities are displayed in a heatmap. 1 means full overlap in errors, and 0 means no overlap in errors.</p>
 </div>
 </div>
 </div>
@@ -8191,9 +8192,9 @@ a.anchor-link {
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
 <h3 style="color:#000000;"> What do we learn from this new figure?  </h3>
-<p>The two neural networks had a Jaccard similarity of 0.31: among flowers misclassified by at least one network, approximately 31% were misclassified by both. This suggests that the two networks often made mistakes on different flowers, despite belonging to the same broad class of methods. The SVM and Keras network had the lowest overlap (0.18), while the random forest and Naive Bayes had the highest overlap among different models (0.67). Because relatively few flowers were misclassified, these similarities may be sensitive to a small change in the number of errors.</p>
+<p>The two neural networks had a Jaccard similarity of 0.31. Thus, of the flowers misclassified by at least one neural network, approximately 31% were misclassified by both neural networks, suggesting that they typically make mistakes on different flowers despite belonging to the same class of methods. The SVM and Keras network had the lowest overlap (0.18), and the random forest and Naive Bayes had the highest overlap (0.67). Yet, not many flowers were misclassified to begin with as all of our methods had high accuracies, so these similarity scores may be sensitive to a small change in the number of misclassifications.</p>
 <h2 style="color:#000000;">Final Recommendation</h2>
-<p>I recommend Naive Bayes for predicting iris species because it had the highest average cross-validation accuracy (96.0%) and macro F1 score (0.960) among the methods compared. The tuned SVM had a slightly higher ROC AUC, but its accuracy and macro F1 were slightly lower. The differences were small and the dataset contained only 150 flowers, so the recommendation is based on this particular comparison rather than evidence that Naive Bayes will always perform best.</p>
+<p>After assessing the five methods, I recommend Naive Bayes for predicting iris species because it had the highest average cross-validation accuracy (96.0%) and macro F1 score (0.960). The tuned SVM had a slightly higher ROC AUC, but its accuracy and macro F1 were slightly lower. The differences were small and the dataset contained only 150 flowers, so the recommendation is based on this particular comparison rather than evidence that Naive Bayes will always perform best on other datasets or observations.</p>
 </div>
 </div>
 </div>

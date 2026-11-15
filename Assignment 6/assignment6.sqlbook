@@ -2,18 +2,9 @@
 # Assignment 6
 -- SQLBook: Markup
 <font size = "5">
-
-Before starting, run the following code
-
-- Make sure you review the lecture for how to setup SQL <br>
-and select an active connection.
-
-- This creates a table of data in SQL for questions (a)-(d). <br>
-You need to run "Execute" on each row, line-by-line. This is <br>
-different from Python, which runs the entire chunk.
-
+Create Table
 -- SQLBook: Code
--- Active: 1710903290079@@127.0.0.1@5432@postgres
+-- Active: 1794503454226@@127.0.0.1@5432@postgres
 
 DROP TABLE IF EXISTS homework_data;
 CREATE TABLE homework_data(driver_id int,
@@ -59,11 +50,17 @@ Hints:
 - In SQL you only need a single equality "="
 - In SQL use single quotes for logical conditions with strings '...'
 -- SQLBook: Code
--- Active: 1710903290079@@127.0.0.1@5432@postgres@public
+-- Active: 1794503454226@@127.0.0.1@5432@postgres
+
 -- Write your own code
 
+SELECT *
+FROM homework_data
+WHERE (nationality = 'British')
+ORDER BY driver_name ASC;
 
-
+-- SQLBook: Markup
+The three drivers with British naitonality sorted in ascending order by `driver_name` are Henry Louvre, Lewis Hamilton, and Simon Cowell. 
 -- SQLBook: Markup
 <font size = "5">
 
@@ -79,12 +76,14 @@ alies, e.g. ``` ... AS ... ```
 
 
 -- SQLBook: Code
--- Active: 1710903290079@@127.0.0.1@5432@postgres@public
+-- Active: 1794503454226@@127.0.0.1@5432@postgres
 -- Write your own code
 
-
-
-
+SELECT COUNT(DISTINCT nationality) AS unique_nationalities,
+    COUNT (*) AS total_rows
+FROM homework_data;
+-- SQLBook: Markup
+There are three unique nationalities in this table and 10 total rows.
 -- SQLBook: Markup
 <font size = "5">
 
@@ -97,12 +96,16 @@ alies, e.g. ``` ... AS ... ```
 
 
 -- SQLBook: Code
--- Active: 1710903290079@@127.0.0.1@5432@postgres@public
+-- Active: 1794503454226@@127.0.0.1@5432@postgres
 -- Write your own code
 
-
-
-
+SELECT driver_id,
+    AVG(lap_times) AS avg_lap_times
+FROM homework_data
+GROUP BY driver_id
+ORDER BY avg_lap_times ASC;
+-- SQLBook: Markup
+The driver with `driver_id` = 9 (Donic Kovak) had the fastest average lap times of 11 seconds. The driver with `driver_id` = 5 (Lewis Hamilton) has the slowest average lap times of 103 seconds.
 -- SQLBook: Markup
 <font size = "5">
 
@@ -118,12 +121,17 @@ HINT: Use ```HAVING SUM(lap_times)``` rather than an alias <br>
 for the code to work correctly.
 
 -- SQLBook: Code
+-- Active: 1794503454226@@127.0.0.1@5432@postgres
 
-# Write your own code
+-- Write your own code
 
-
-
-
+SELECT nationality,
+    SUM(lap_times) AS total_lap_times
+FROM homework_data
+GROUP BY nationality
+HAVING SUM(lap_times) > 150;
+-- SQLBook: Markup
+Both German and British nationalities have a total lap time sum of greater than 150 seconds 261 and 209 respectively. Since the drivers with Spanish nationality are not in the output, this means their sum of total lap times was less than 150 seconds, so they had the fastest lap time total when grouped by nationality.
 -- SQLBook: Markup
 <font size = "5">
 
@@ -137,15 +145,35 @@ for the code to work correctly.
  case letters  HINT: By default SQL only lets you enter <br>
  lower case letters. However, you can enter names with double <br>
  quotations, e.g. "driverId"
- - INSERT row of data (invent the valus)
+ - INSERT row of data (invent the values)
 
 $\qquad$ <img src="figures/codebook_lap_times.png" alt="drawing" width="350"/>
 
 HINT: To insert a string value, use 'single quotations'
 
 -- SQLBook: Code
+-- Active: 1794503454226@@127.0.0.1@5432@postgres
 -- Write your own code
+DROP TABLE IF EXISTS lap_times;
+CREATE TABLE lap_times("raceId" int,
+    "driverId" int,
+    lap int,
+    position int,
+    time varchar(255),
+    milliseconds int);
+INSERT INTO lap_times VALUES (1, 1, 1, 1, '10:05',1000);
+INSERT INTO lap_times VALUES (1, 2, 1, 2, '10:07',1700);
+INSERT INTO lap_times VALUES (1, 3, 1, 3, '20:27',200700);
+INSERT INTO lap_times VALUES (2, 1, 1, 4, '15:22',150020);
+INSERT INTO lap_times VALUES (2, 2, 1, 5, '18:22',170000);
+INSERT INTO lap_times VALUES (3, 2, 1, 1, '1:27',700);
 
+INSERT INTO lap_times VALUES (3, 2, 2, 1, '1:50',900);
 
-
-
+INSERT INTO lap_times VALUES (3, 2, 3, 1, '1:45',745);
+-- show table and also sort by milliseconds in ascending order
+SELECT *
+FROM lap_times
+ORDER BY milliseconds;
+-- SQLBook: Markup
+Here I have created a table `lap_times` with 8 rows, 3 races, and 3 drivers, showing their lap, position, time, and time in milliseconds. The fastest milliseconds and time were from driver #2 in race #3 in lap 1 where their positions was 1st, their time was 1:27, and milliseconds were 700 (these are fake numbers and not mathematically accurate in regards to converting the time to milliseconds).

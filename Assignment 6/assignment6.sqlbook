@@ -1,5 +1,13 @@
 -- SQLBook: Markup
 # Assignment 6
+### Maxine Hakimi-Bulson
+-- SQLBook: Markup
+This assignment explores ficticious racing data for the purpose of practicing coding in SQL (for instance, Simon Cowell is not a racer).
+
+Here are the key findings:
+- The table contains 10 rows and three nationalities. The three British drivers, sorted by name, are Henry Louvre, Lewis Hamilton, and Simon Cowell.
+- Donic Kovak had the fastest average lap time at 11 seconds, while Lewis Hamilton had the slowest at 103 seconds.
+- German and British drivers had total lap times greater than 150 seconds, at 261 and 209 seconds, respectively. Spanish drivers were excluded by the filter, meaning their total was 150 seconds or less.
 -- SQLBook: Markup
 <font size = "5">
 Create Table
@@ -60,7 +68,7 @@ WHERE (nationality = 'British')
 ORDER BY driver_name ASC;
 
 -- SQLBook: Markup
-The three drivers with British naitonality sorted in ascending order by `driver_name` are Henry Louvre, Lewis Hamilton, and Simon Cowell. 
+The three drivers with British nationality sorted in ascending order by `driver_name` are Henry Louvre, Lewis Hamilton, and Simon Cowell. 
 -- SQLBook: Markup
 <font size = "5">
 
@@ -131,7 +139,7 @@ FROM homework_data
 GROUP BY nationality
 HAVING SUM(lap_times) > 150;
 -- SQLBook: Markup
-Both German and British nationalities have a total lap time sum of greater than 150 seconds 261 and 209 respectively. Since the drivers with Spanish nationality are not in the output, this means their sum of total lap times was less than 150 seconds, so they had the fastest lap time total when grouped by nationality.
+Both German and British nationalities have a total lap time sum of greater than 150 seconds: 261 and 209 respectively. Since the drivers with Spanish nationality are not in the output, this means their sum of total lap times was less than 150 seconds, so they had the fastest lap time total when grouped by nationality.
 -- SQLBook: Markup
 <font size = "5">
 

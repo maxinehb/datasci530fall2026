@@ -7485,7 +7485,7 @@ a.anchor-link {
 <div style="text-align: center;">
 <h1>Clustering Consumer Insurance Questions</h1>
 <h3>DATASCI 530 - Project 3</h3>
-<p>Maxine Hakimi-Bulson</p>
+<h4>Maxine Hakimi-Bulson</h4>
 </div>
 <h2 id="Introduction">Introduction<a class="anchor-link" href="#Introduction">¶</a></h2><p>Insurance questions cover many subjects, from health coverage to retirement planning. Organizing these questions by topic could make insurance information easier to navigate. This project examines whether unsupervised text clustering can identify meaningful groups without using the questions’ existing insurance-category labels.</p>
 <p>I analyze 16,865 unique questions from InsuranceQA using CountVectorizer to represent word counts, TruncatedSVD to reduce the number of features, and MiniBatchKMeans to group questions with similar vocabulary. The original categories are used afterward to interpret and evaluate the groups.</p>
@@ -7686,8 +7686,7 @@ table[id^="T_"] td {
         <span class="n">category_counts</span><span class="o">.</span><span class="n">gt</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
     <span class="p">]</span>
 <span class="p">})</span>
-
-<span class="n">display</span><span class="p">(</span><span class="n">quality_summary</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">quality_summary</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
@@ -7700,62 +7699,40 @@ table[id^="T_"] td {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
 <thead>
 <tr style="text-align: right;">
-<th></th>
 <th>Check</th>
 <th>Count</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<th>0</th>
 <td>Question records</td>
 <td>16889</td>
 </tr>
 <tr>
-<th>1</th>
 <td>Insurance categories</td>
 <td>12</td>
 </tr>
 <tr>
-<th>2</th>
 <td>Missing or blank questions</td>
 <td>0</td>
 </tr>
 <tr>
-<th>3</th>
 <td>Missing or blank categories</td>
 <td>0</td>
 </tr>
 <tr>
-<th>4</th>
 <td>Repeated questions</td>
 <td>24</td>
 </tr>
 <tr>
-<th>5</th>
 <td>Questions with conflicting categories</td>
 <td>0</td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 </div>
 </div>
@@ -8302,7 +8279,7 @@ table[id^="T_"] td {
     <span class="p">})</span>
 
 <span class="n">cluster_summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">cluster_summary</span><span class="p">)</span>
-<span class="n">display</span><span class="p">(</span><span class="n">cluster_summary</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">cluster_summary</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
@@ -8315,24 +8292,9 @@ table[id^="T_"] td {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
 <thead>
 <tr style="text-align: right;">
-<th></th>
 <th>Cluster</th>
 <th>Training questions</th>
 <th>Frequent words</th>
@@ -8341,113 +8303,97 @@ table[id^="T_"] td {
 </thead>
 <tbody>
 <tr>
-<th>0</th>
 <td>1</td>
 <td>779</td>
-<td>car, insurance, cover, drive, affect, need, co...</td>
+<td>car, insurance, cover, drive, affect, need, cost, cheap</td>
 <td>Can I Get USAA Car Insurance ?</td>
 </tr>
 <tr>
-<th>1</th>
 <td>2</td>
 <td>1012</td>
-<td>medicare, cover, covered, advantage, plan, ins...</td>
-<td>Is Transcranial Magnetic Stimulation Covered B...</td>
+<td>medicare, cover, covered, advantage, plan, insurance, best, supplement</td>
+<td>Is Transcranial Magnetic Stimulation Covered By Medicare ?</td>
 </tr>
 <tr>
-<th>2</th>
 <td>3</td>
 <td>250</td>
-<td>life, insurance, term, policy, year, buy, best...</td>
+<td>life, insurance, term, policy, year, buy, best, cash</td>
 <td>Which Company Is Best For Term Life Insurance ?</td>
 </tr>
 <tr>
-<th>3</th>
 <td>4</td>
 <td>462</td>
-<td>home, insurance, cover, need, cost, damage, cl...</td>
+<td>home, insurance, cover, need, cost, damage, claim, owners</td>
 <td>Can You Write Off Home Insurance On Your Taxes ?</td>
 </tr>
 <tr>
-<th>4</th>
 <td>5</td>
 <td>2347</td>
-<td>life, insurance, policy, buy, best, good, cash...</td>
+<td>life, insurance, policy, buy, best, good, cash, work</td>
 <td>Why Is Whole Life Insurance More Expensive ?</td>
 </tr>
 <tr>
-<th>5</th>
 <td>6</td>
 <td>332</td>
-<td>plan, retirement, medigap, qualified, best, sa...</td>
+<td>plan, retirement, medigap, qualified, best, save, pension, savings</td>
 <td>What Is The Least Expensive Medigap Plan ?</td>
 </tr>
 <tr>
-<th>6</th>
 <td>7</td>
 <td>824</td>
-<td>insurance, renters, cover, illness, critical, ...</td>
+<td>insurance, renters, cover, illness, critical, need, medigap, cost</td>
 <td>Does Renters Insurance Cover Pet Damage ?</td>
 </tr>
 <tr>
-<th>7</th>
 <td>8</td>
 <td>771</td>
-<td>annuities, medigap, annuity, variable, ira, ro...</td>
+<td>annuities, medigap, annuity, variable, ira, roth, fixed, 401k</td>
 <td>What Are The Different Kinds Of Annuities ?</td>
 </tr>
 <tr>
-<th>8</th>
 <td>9</td>
 <td>188</td>
-<td>pay, medicare, home, nursing, care, hospital, ...</td>
+<td>pay, medicare, home, nursing, care, hospital, wheelchair, surgery</td>
 <td>Will Medicare Pay For Foot Orthotics ?</td>
 </tr>
 <tr>
-<th>9</th>
 <td>10</td>
 <td>364</td>
-<td>long, insurance, term, care, buy, cover, best,...</td>
-<td>Can I Buy Long Term Care Insurance For My Moth...</td>
+<td>long, insurance, term, care, buy, cover, best, need</td>
+<td>Can I Buy Long Term Care Insurance For My Mother ?</td>
 </tr>
 <tr>
-<th>10</th>
 <td>11</td>
 <td>1146</td>
-<td>insurance, health, cover, cost, pay, best, buy...</td>
-<td>Section 125 Employer Health Insurance Plan Wha...</td>
+<td>insurance, health, cover, cost, pay, best, buy, work</td>
+<td>Section 125 Employer Health Insurance Plan What Is It ?</td>
 </tr>
 <tr>
-<th>11</th>
 <td>12</td>
 <td>500</td>
-<td>disability, insurance, short, term, buy, cover...</td>
+<td>disability, insurance, short, term, buy, cover, need, pay</td>
 <td>What Is The Best Disability Insurance Company ?</td>
 </tr>
 <tr>
-<th>12</th>
 <td>13</td>
 <td>600</td>
-<td>insurance, homeowners, cover, damage, covered,...</td>
-<td>Does Homeowners Insurance Cover Window Replace...</td>
+<td>insurance, homeowners, cover, damage, covered, claim, pay, roof</td>
+<td>Does Homeowners Insurance Cover Window Replacement ?</td>
 </tr>
 <tr>
-<th>13</th>
 <td>14</td>
 <td>478</td>
-<td>insurance, auto, cover, long, coverage, cost, ...</td>
+<td>insurance, auto, cover, long, coverage, cost, policy, best</td>
 <td>Does auto insurance cover theft ?</td>
 </tr>
 <tr>
-<th>14</th>
 <td>15</td>
 <td>66</td>
-<td>long, term, disability, insurance, buy, work, ...</td>
-<td>What Is The Difference Between Long Term Care ...</td>
+<td>long, term, disability, insurance, buy, work, cover, cost</td>
+<td>What Is The Difference Between Long Term Care And Disability Insurance ?</td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 </div>
 </div>
@@ -8590,7 +8536,7 @@ table[id^="T_"] td {
 
 <span class="n">alternative_summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">alternative_summary</span><span class="p">)</span>
 <span class="k">with</span> <span class="n">pd</span><span class="o">.</span><span class="n">option_context</span><span class="p">(</span><span class="s2">"display.max_colwidth"</span><span class="p">,</span> <span class="kc">None</span><span class="p">):</span>
-    <span class="n">display</span><span class="p">(</span><span class="n">alternative_summary</span><span class="p">)</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">alternative_summary</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
 </pre></div>
 </div>
 </div>
@@ -8603,24 +8549,9 @@ table[id^="T_"] td {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
 <thead>
 <tr style="text-align: right;">
-<th></th>
 <th>Cluster</th>
 <th>Training questions</th>
 <th>Frequent words</th>
@@ -8629,84 +8560,72 @@ table[id^="T_"] td {
 </thead>
 <tbody>
 <tr>
-<th>0</th>
 <td>1</td>
 <td>209</td>
 <td>cover, medicare, medigap, plan, dental, care, home, drugs</td>
 <td>Does Medicare Cover CPAP Supplies ?</td>
 </tr>
 <tr>
-<th>1</th>
 <td>2</td>
 <td>2583</td>
 <td>life, insurance, policy, term, best, buy, cash, good</td>
 <td>Why Is Whole Life Insurance More Expensive ?</td>
 </tr>
 <tr>
-<th>2</th>
 <td>3</td>
 <td>1086</td>
 <td>annuities, retirement, plan, medigap, annuity, variable, 401k, ira</td>
 <td>What Are The Different Kinds Of Annuities ?</td>
 </tr>
 <tr>
-<th>3</th>
 <td>4</td>
 <td>381</td>
 <td>long, insurance, term, care, buy, cover, need, best</td>
 <td>What Is The Difference Between Long Term Care And Disability Insurance ?</td>
 </tr>
 <tr>
-<th>4</th>
 <td>5</td>
 <td>1152</td>
 <td>insurance, health, cover, cost, pay, best, buy, work</td>
 <td>Section 125 Employer Health Insurance Plan What Is It ?</td>
 </tr>
 <tr>
-<th>5</th>
 <td>6</td>
 <td>644</td>
 <td>insurance, renters, cover, need, damage, cost, apartment, buy</td>
 <td>Does Renters Insurance Cover Pet Damage ?</td>
 </tr>
 <tr>
-<th>6</th>
 <td>7</td>
 <td>1247</td>
 <td>insurance, car, home, need, cost, cover, illness, critical</td>
 <td>Can I Get USAA Car Insurance ?</td>
 </tr>
 <tr>
-<th>7</th>
 <td>8</td>
 <td>559</td>
 <td>disability, insurance, term, long, short, buy, cover, need</td>
 <td>What Is The Best Disability Insurance Company ?</td>
 </tr>
 <tr>
-<th>8</th>
 <td>9</td>
 <td>488</td>
 <td>insurance, auto, cover, long, coverage, cost, policy, best</td>
 <td>Does auto insurance cover theft ?</td>
 </tr>
 <tr>
-<th>9</th>
 <td>10</td>
 <td>1011</td>
 <td>medicare, pay, covered, advantage, plan, insurance, best, supplement</td>
 <td>Is Transcranial Magnetic Stimulation Covered By Medicare ?</td>
 </tr>
 <tr>
-<th>10</th>
 <td>11</td>
 <td>357</td>
 <td>insurance, cover, homeowners, home, damage, water, roof, broken</td>
 <td>Does Homeowners Insurance Cover Window Replacement ?</td>
 </tr>
 <tr>
-<th>11</th>
 <td>12</td>
 <td>402</td>
 <td>insurance, homeowners, covered, claim, pay, cost, damage, need</td>
@@ -8714,7 +8633,6 @@ table[id^="T_"] td {
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 </div>
 </div>
@@ -8839,24 +8757,33 @@ table[id^="T_"] td {
     <span class="n">test_clusters</span>
 <span class="p">)</span>
 
+<span class="n">stability_15</span> <span class="o">=</span> <span class="n">stability_results</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span>
+    <span class="n">stability_results</span><span class="p">[</span><span class="s2">"Clusters"</span><span class="p">]</span><span class="o">.</span><span class="n">eq</span><span class="p">(</span><span class="mi">15</span><span class="p">)</span>
+<span class="p">]</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">"Random seed"</span><span class="p">)[</span><span class="s2">"ARI with original model"</span><span class="p">]</span>
+
 <span class="n">test_results</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
     <span class="s2">"Measure"</span><span class="p">:</span> <span class="p">[</span>
         <span class="s2">"Test questions"</span><span class="p">,</span>
         <span class="s2">"SVD components"</span><span class="p">,</span>
         <span class="s2">"Clusters"</span><span class="p">,</span>
+        <span class="s2">"Validation silhouette"</span><span class="p">,</span>
         <span class="s2">"Test silhouette"</span><span class="p">,</span>
-        <span class="s2">"ARI with insurance categories"</span>
+        <span class="s2">"Test ARI vs. insurance categories"</span><span class="p">,</span>
+        <span class="s2">"Stability ARI, seed 42"</span><span class="p">,</span>
+        <span class="s2">"Stability ARI, seed 2026"</span>
     <span class="p">],</span>
     <span class="s2">"Value"</span><span class="p">:</span> <span class="p">[</span>
-        <span class="nb">len</span><span class="p">(</span><span class="n">test_data</span><span class="p">),</span>
-        <span class="mi">25</span><span class="p">,</span>
-        <span class="mi">15</span><span class="p">,</span>
-        <span class="nb">round</span><span class="p">(</span><span class="n">test_silhouette</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
-        <span class="nb">round</span><span class="p">(</span><span class="n">category_agreement</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">test_data</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="s2">"25"</span><span class="p">,</span>
+        <span class="s2">"15"</span><span class="p">,</span>
+        <span class="s2">"0.460"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">test_silhouette</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">category_agreement</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">stability_15</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">42</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
+        <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">stability_15</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">2026</span><span class="p">]</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">"</span>
     <span class="p">]</span>
 <span class="p">})</span>
-
-<span class="n">display</span><span class="p">(</span><span class="n">test_results</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">HTML</span><span class="p">(</span><span class="n">test_results</span><span class="o">.</span><span class="n">to_html</span><span class="p">(</span><span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)))</span>
 
 <span class="c1"># Retain the assignments for the final tables and figures.</span>
 <span class="n">clustered_test</span> <span class="o">=</span> <span class="n">test_data</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
@@ -8873,57 +8800,48 @@ table[id^="T_"] td {
 <div class="jp-OutputArea-child">
 <div class="jp-OutputPrompt jp-OutputArea-prompt"></div>
 <div class="jp-RenderedHTMLCommon jp-RenderedHTML jp-OutputArea-output" data-mime-type="text/html" tabindex="0">
-<div>
-<style scoped="">
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
-</style>
 <table border="1" class="dataframe">
 <thead>
 <tr style="text-align: right;">
-<th></th>
 <th>Measure</th>
 <th>Value</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<th>0</th>
 <td>Test questions</td>
-<td>3373.000</td>
+<td>3,373</td>
 </tr>
 <tr>
-<th>1</th>
 <td>SVD components</td>
-<td>25.000</td>
+<td>25</td>
 </tr>
 <tr>
-<th>2</th>
 <td>Clusters</td>
-<td>15.000</td>
+<td>15</td>
 </tr>
 <tr>
-<th>3</th>
+<td>Validation silhouette</td>
+<td>0.460</td>
+</tr>
+<tr>
 <td>Test silhouette</td>
 <td>0.476</td>
 </tr>
 <tr>
-<th>4</th>
-<td>ARI with insurance categories</td>
+<td>Test ARI vs. insurance categories</td>
 <td>0.796</td>
+</tr>
+<tr>
+<td>Stability ARI, seed 42</td>
+<td>0.811</td>
+</tr>
+<tr>
+<td>Stability ARI, seed 2026</td>
+<td>0.896</td>
 </tr>
 </tbody>
 </table>
-</div>
 </div>
 </div>
 </div>
@@ -8935,7 +8853,7 @@ table[id^="T_"] td {
 </div>
 <div class="jp-InputArea jp-Cell-inputArea"><div class="jp-InputPrompt jp-InputArea-prompt">
 </div><div class="jp-RenderedHTMLCommon jp-RenderedMarkdown jp-MarkdownOutput" data-mime-type="text/markdown">
-<p>The selected model achieved a test silhouette score of 0.476, compared with 0.460 on validation data, suggesting that separation was maintained on unseen questions. Its ARI against the original categories was 0.796, indicating substantial agreement despite category labels being excluded from training. These overall results are examined alongside individual cluster compositions below.</p>
+<p>The selected model achieved a test silhouette score of 0.476, compared with 0.460 on validation data, suggesting that cluster separation was maintained on unseen questions. Its ARI against the original categories was 0.796, indicating substantial agreement even though category labels were excluded from training. The two alternate starting points had ARIs of 0.811 and 0.896 relative to the original model’s assignments, showing reasonably consistent but not identical clusters. The cluster-composition figure below shows where the model’s results align with the categories and where they differ.</p>
 </div>
 </div>
 </div>

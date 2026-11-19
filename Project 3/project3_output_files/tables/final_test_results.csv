@@ -1,0 +1,9 @@
+Measure,Value
+Test questions,"3,373"
+SVD components,25
+Clusters,15
+Validation silhouette,0.460
+Test silhouette,0.476
+Test ARI vs. insurance categories,0.796
+"Stability ARI, seed 42",0.811
+"Stability ARI, seed 2026",0.896
